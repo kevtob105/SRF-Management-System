@@ -1,1 +1,1021 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SRF Management Workspace v1.17</title>
+<style>
+:root{--ink:#152638;--muted:#6d7d8e;--line:#dce5eb;--bg:#f3f7f9;--panel:#fff;--navy:#142f45;--teal:#0d8b83;--teal2:#e8f6f4;--warn:#a35b14;--shadow:0 12px 30px rgba(23,48,67,.07)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.5 Inter,Segoe UI,Arial,sans-serif}
+header{background:linear-gradient(115deg,#102b40,#1b5262);color:white;padding:25px clamp(18px,4vw,54px) 28px}
+.page-view{display:block}.page-view[hidden]{display:none!important}
+.app-nav{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+.app-nav a{display:inline-flex;align-items:center;gap:8px;padding:9px 14px;border:1px solid #ffffff45;border-radius:10px;color:#e7f2f5;text-decoration:none;font-size:12px;font-weight:750;background:#ffffff0d;transition:.15s}
+.app-nav a:hover{background:#ffffff20;border-color:#ffffff70}
+.app-nav a.active{background:#fff;color:#123b4b;border-color:#fff;box-shadow:0 4px 14px #001b2b30}
+.view-intro{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:0 0 14px;padding:2px 2px 0}
+.view-intro h1{font-size:19px;line-height:1.25;margin:0;color:#18364a}
+.view-intro p{font-size:12px;color:var(--muted);margin:4px 0 0}
+.view-link{display:inline-flex;align-items:center;gap:7px;padding:9px 12px;background:#e8f6f4;color:#08756e;border:1px solid #b9e2dc;border-radius:9px;text-decoration:none;font-weight:800;font-size:11px;white-space:nowrap}
+.view-link:hover{background:#d5eee9}
+@media(max-width:520px){.app-nav a{flex:1;justify-content:center}.view-intro{align-items:flex-start;flex-direction:column}.view-link{width:100%;justify-content:center}}
 
+.topline{display:flex;align-items:center;gap:12px}.logo{width:42px;height:42px;border-radius:12px;background:#ffffff1b;display:grid;place-items:center;font-weight:800;letter-spacing:.5px;border:1px solid #ffffff35}.eyebrow{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#a8d9d5;font-weight:700}.brand{font-size:21px;font-weight:750;letter-spacing:-.3px}.sub{color:#d1e1e8;margin:9px 0 0;max-width:760px;font-size:13px}
+main{max-width:1500px;margin:0 auto;padding:22px clamp(14px,3vw,36px) 48px}.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:18px}.stat,.panel{background:var(--panel);border:1px solid var(--line);border-radius:15px;box-shadow:var(--shadow)}.stat{padding:15px 18px}.stat-label{font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.8px}.stat-value{font-size:25px;font-weight:800;margin-top:3px;letter-spacing:-.7px}.stat-note{font-size:11px;color:var(--muted);margin-top:1px}
+.panel{padding:19px 20px;margin-bottom:18px}.section-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:13px}.section-head h2{font-size:16px;margin:0;font-weight:750}.section-head p{margin:3px 0 0;color:var(--muted);font-size:12px}.tag{background:#eef4f7;color:#426072;border-radius:999px;padding:5px 9px;font-size:10px;font-weight:700;white-space:nowrap}
+textarea{width:100%;min-height:220px;resize:vertical;border:1px solid #cbd8e0;border-radius:11px;padding:14px 15px;background:#fbfdfe;color:#203445;font:12px/1.65 Consolas,Monaco,monospace;outline:none}textarea:focus,input:focus{border-color:var(--teal);box-shadow:0 0 0 3px #0d8b831c}.actions{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-top:12px}.btn{border:0;border-radius:9px;padding:10px 14px;font-weight:700;font-size:12px;cursor:pointer;transition:.15s}.btn:hover{transform:translateY(-1px);filter:brightness(.98)}.primary{background:var(--teal);color:white}.secondary{background:#eaf0f3;color:#294355}.outline{background:white;color:#294355;border:1px solid var(--line)}.danger{background:#fff0ee;color:#a3372c}.hint{font-size:11px;color:var(--muted);margin-left:auto}
+.notice{padding:10px 12px;border-radius:9px;background:#f1f7fa;border:1px solid #dce9ef;color:#486171;font-size:11px;margin-top:12px}.notice strong{color:#254557}.report-meta-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:12px 0 14px}.report-meta-item{display:flex;flex-direction:column;gap:5px;min-width:0}.report-meta-item label{font-size:12px;font-weight:750;color:#294355}.report-meta-item input{width:100%;border:1px solid #cbd8e0;border-radius:9px;padding:10px 12px;font:13px Inter,Segoe UI,Arial,sans-serif;background:#fff;outline:none}.report-meta-item small{color:var(--muted);font-size:10px;line-height:1.4}.conflict-note{color:#8c3b16;background:#fff7ed}.conflict-note td:last-child{font-weight:650}.table-tools{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin:12px 0}.search{flex:1;min-width:200px;max-width:360px;border:1px solid var(--line);border-radius:9px;padding:9px 11px;font-size:12px;background:#fff;outline:none}.date-filter-group{display:flex;align-items:center;gap:7px;flex-wrap:wrap}.date-filter-group label{font-size:11px;font-weight:750;color:#425b6b;white-space:nowrap}.date-filter{min-width:155px;border:1px solid var(--line);border-radius:9px;padding:9px 10px;font:12px Inter,Segoe UI,Arial,sans-serif;color:#294355;background:#fff;outline:none}.clear-date-filter{border:1px solid var(--line);border-radius:9px;background:#f4f7f9;color:#425b6b;padding:9px 10px;font-size:11px;font-weight:700;cursor:pointer}.clear-date-filter:hover{background:#eaf0f3}.table-wrap{border:0;border-radius:11px;background:transparent}.record-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}.record-card{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:var(--shadow)}.record-title{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:#eaf1f4;border-bottom:1px solid var(--line);font-weight:800}.record-fields{width:100%;border-collapse:collapse;font-size:12px}.record-fields td{padding:8px 12px;border-bottom:1px solid #edf1f3;vertical-align:top}.record-fields td:first-child{width:46%;color:var(--muted);font-weight:650}.record-fields tr:last-child td{border-bottom:0}.record-fields td:last-child{overflow-wrap:anywhere}.record-actions{padding:9px 12px;border-top:1px solid #edf1f3;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.workflow-checks{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.workflow-check{display:inline-flex;align-items:center;gap:5px;color:#294355;font-size:11px;font-weight:700;cursor:pointer}.workflow-check input{accent-color:var(--teal);width:15px;height:15px;cursor:pointer}.duplicate-flag{display:inline-flex;align-items:center;gap:5px;margin-left:8px;background:#fff2df;color:#92510f;border:1px solid #f0d3a9;border-radius:999px;padding:3px 7px;font-size:9px;font-weight:800;white-space:nowrap}.sheet th{position:sticky;top:0;z-index:1;background:#eaf1f4;color:#294355;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.45px;padding:11px 10px;border-bottom:1px solid #d5e0e6;white-space:nowrap}.sheet td{padding:10px;border-bottom:1px solid #edf1f3;vertical-align:top;max-width:220px;overflow-wrap:anywhere}.sheet tr:hover td{background:#f8fbfc}.sheet tr:last-child td{border-bottom:0}.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}.crew-cell{min-width:190px;white-space:pre-line}
+.crew-copy-list{display:flex;flex-wrap:wrap;gap:6px 7px;align-items:center}
+.crew-copy-item{display:inline-flex;align-items:center;gap:5px;max-width:100%;padding:4px 6px 4px 9px;border:1px solid #e1e9ed;border-radius:8px;background:#f8fbfc;color:#294355;font-size:11px;line-height:1.3}
+.crew-copy-name{overflow-wrap:anywhere}
+.copy-crew-btn{width:25px;height:25px;flex:0 0 25px;display:inline-flex;align-items:center;justify-content:center;border:1px solid transparent;border-radius:6px;background:transparent;color:#718493;cursor:pointer;padding:0;transition:.15s}
+.copy-crew-btn:hover{background:#e7f4f2;color:#08756e;border-color:#c8e6e1}
+.copy-crew-btn:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+.copy-crew-btn.copied{background:#e7f6ee;color:#16734c;border-color:#c7e8d5}
+.copy-crew-btn svg{width:14px;height:14px;display:block}
+.crew-copy-item.compact{padding:0;border:0;background:transparent;font-size:11px}
+.crew-copy-item.compact .copy-crew-btn{width:23px;height:23px;flex-basis:23px}
+.muted{color:var(--muted)}.status{display:inline-block;background:#e8f6ef;color:#16734c;padding:3px 7px;border-radius:999px;font-size:10px;font-weight:800}.row-delete{border:0;background:#fff0ee;color:#a3372c;border-radius:7px;padding:5px 8px;font-size:10px;font-weight:700;cursor:pointer}.row-merge{border:0;background:#e6f5f2;color:#08756e;border:1px solid #b9e2dc;border-radius:7px;padding:5px 10px;font-size:10px;font-weight:800;cursor:pointer}.row-merge:hover{background:#d5eee9}.card-action-buttons{display:flex;gap:7px;align-items:center;flex-wrap:wrap}.empty{text-align:center;padding:35px;color:var(--muted)}.footer{color:#81909d;font-size:10px;text-align:center;margin-top:20px}
+
+.dashboard-filter{display:grid;grid-template-columns:repeat(7,minmax(120px,1fr));gap:10px;margin:14px 0 10px}
+.dashboard-filter label{display:flex;flex-direction:column;gap:5px;font-size:10px;font-weight:800;color:#526879;letter-spacing:.35px;text-transform:uppercase}
+.dashboard-filter input,.dashboard-filter select{width:100%;min-width:0;border:1px solid var(--line);border-radius:9px;padding:9px 10px;background:#fff;color:var(--ink);font:12px Inter,Segoe UI,Arial,sans-serif;outline:none}
+.dashboard-filter .filter-action{display:flex;align-items:flex-end}
+.dashboard-filter .filter-action button{width:100%;height:36px}
+.dashboard-scope{font-size:11px;color:var(--muted);margin:3px 0 14px}
+.dashboard-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px;margin:12px 0 22px}
+.dashboard-kpi{border:1px solid var(--line);border-radius:12px;padding:13px 14px;background:linear-gradient(145deg,#fff,#f9fbfc);min-width:0}
+.dashboard-kpi .kpi-label{font-size:10px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.6px}
+.dashboard-kpi .kpi-value{font-size:24px;font-weight:850;letter-spacing:-.6px;margin:3px 0 0;overflow-wrap:anywhere}
+.dashboard-kpi .kpi-note{font-size:10px;color:var(--muted);margin-top:2px}
+.dashboard-section-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:20px 0 11px;padding-top:5px}
+.dashboard-section-title h3{font-size:14px;margin:0;font-weight:800;color:#20394d}
+.dashboard-section-title span{font-size:10px;color:var(--muted)}
+.dashboard-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;margin-bottom:13px}
+.dashboard-grid.four{grid-template-columns:repeat(2,minmax(0,1fr))}
+.dashboard-card{border:1px solid var(--line);border-radius:12px;background:#fff;padding:14px 15px;min-width:0}
+.dashboard-card h4{font-size:12px;margin:0;font-weight:800;color:#294355}
+.dashboard-card .chart-sub{font-size:10px;color:var(--muted);margin:3px 0 12px;line-height:1.45}
+.bar-list{display:flex;flex-direction:column;gap:10px}
+.bar-item{min-width:0}
+.bar-meta{display:flex;justify-content:space-between;gap:10px;margin-bottom:4px;font-size:10px;align-items:baseline}
+.bar-meta span{color:#42596a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.bar-meta strong{color:#1c3448;white-space:nowrap;font-size:10px}
+.bar-track{height:7px;background:#edf2f4;border-radius:99px;overflow:hidden}
+.bar-fill{height:100%;background:linear-gradient(90deg,#0d8b83,#56b9a9);border-radius:99px;min-width:2px}
+.trend-list{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:7px;align-items:end;min-height:146px;padding-top:7px}
+.trend-col{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:6px;height:138px;min-width:0}
+.trend-col .trend-val{font-size:9px;font-weight:800;color:#284456}
+.trend-bar-wrap{height:94px;width:100%;display:flex;align-items:flex-end;justify-content:center}
+.trend-bar{width:min(28px,72%);min-height:3px;background:linear-gradient(180deg,#28a99a,#0c7772);border-radius:5px 5px 2px 2px}
+.trend-label{font-size:9px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.status-stack{display:flex;height:12px;border-radius:99px;overflow:hidden;background:#edf2f4;margin:11px 0 12px}
+.status-legend{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px 12px}
+.legend-item{display:flex;justify-content:space-between;gap:8px;font-size:10px;color:#506474}
+.legend-name{display:flex;align-items:center;gap:6px;min-width:0}
+.legend-dot{width:8px;height:8px;border-radius:50%;flex:0 0 8px}
+.dash-table-wrap{width:100%;overflow:auto}
+.dash-table{width:100%;border-collapse:collapse;font-size:10px;min-width:320px}
+.dash-table th{text-align:left;font-size:9px;text-transform:uppercase;letter-spacing:.4px;color:#617586;padding:8px 7px;border-bottom:1px solid var(--line);white-space:nowrap}
+.dash-table td{padding:8px 7px;border-bottom:1px solid #eef2f4;color:#334d60;vertical-align:top}
+.dash-table tr:last-child td{border-bottom:0}
+.dash-table td:last-child,.dash-table th:last-child{text-align:right}
+.dash-empty{font-size:11px;color:var(--muted);padding:13px 4px;text-align:center}
+.quality-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px}
+.quality-item{background:#f7fafb;border:1px solid #e8eef1;border-radius:10px;padding:10px}
+.quality-item strong{display:block;font-size:19px;color:#203b50}
+.quality-item span{display:block;font-size:10px;color:#687d8d;margin-top:2px}
+.quality-item.warn strong{color:#a35b14}
+.quality-item.good strong{color:#16734c}
+.workflow-row{display:grid;grid-template-columns:100px 1fr 36px;align-items:center;gap:8px;margin:10px 0;font-size:10px;color:#526879}
+.workflow-track{height:8px;background:#edf2f4;border-radius:99px;overflow:hidden}
+.workflow-track span{display:block;height:100%;background:#0d8b83;border-radius:99px}
+.dashboard-footnote{font-size:10px;color:var(--muted);line-height:1.5;margin-top:12px}
+@media(max-width:1000px){.dashboard-filter{grid-template-columns:repeat(3,minmax(0,1fr))}.dashboard-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:720px){.dashboard-grid,.dashboard-grid.four{grid-template-columns:1fr}.dashboard-filter{grid-template-columns:repeat(2,minmax(0,1fr))}.quality-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.trend-list{grid-template-columns:repeat(6,minmax(0,1fr))}}
+@media(max-width:420px){.dashboard-filter{grid-template-columns:1fr}.dashboard-kpi .kpi-value{font-size:21px}.trend-list{grid-template-columns:repeat(4,minmax(0,1fr))}}
+
+@media(max-width:720px){.report-meta-grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr}.stat{padding:12px 15px}.stat-value{font-size:22px}.panel{padding:15px}.section-head{flex-direction:column}.hint{margin-left:0;width:100%}}
+</style>
+</head>
+<body>
+<header>
+  <div class="topline"><div class="logo">SRF</div><div><div class="eyebrow">Field data workspace</div><div class="brand">SRF Management Workspace</div></div></div>
+  <p class="sub">Input laporan dan analisis operasional berada di halaman terpisah, dengan data tersimpan pada browser yang sama.</p>
+  <nav class="app-nav" aria-label="Navigasi utama">
+    <a href="#input" data-view-link="input" aria-current="page"><span>＋</span> Paste Laporan SRF</a>
+    <a href="#dashboard" data-view-link="dashboard"><span>▦</span> Dashboard</a>
+  </nav>
+</header>
+<main>
+  <div class="page-view" id="dashboardView" hidden>
+  <div class="view-intro"><div><h1>SRF Dashboard</h1><p>Ringkasan management dan analisis operasional dari laporan yang tersimpan.</p></div><a class="view-link" href="#input">＋ Paste Laporan SRF</a></div>
+  <section class="panel" id="dashboardPanel">
+    <div class="section-head"><div><h2>1. Executive Overview</h2><p>Ringkasan untuk management dan analisis operasional berdasarkan laporan yang tersimpan di browser ini.</p></div><span class="tag">MANAGEMENT + OPERASIONAL</span></div>
+    <div class="dashboard-filter">
+      <label>Dari tanggal report<input id="dashboardFrom" type="date" /></label>
+      <label>Sampai tanggal report<input id="dashboardTo" type="date" /></label>
+      <label>Reporter<select id="dashboardReporter"><option value="">Semua reporter</option></select></label>
+      <label>Lokasi<select id="dashboardLocation"><option value="">Semua lokasi</option></select></label>
+      <label>Status SRF<select id="dashboardStatus"><option value="">Semua status</option></select></label>
+      <label>Klasifikasi<select id="dashboardClass"><option value="">Semua klasifikasi</option></select></label>
+      <div class="filter-action"><button class="btn outline" id="resetDashboardFilters" type="button">Reset filter</button></div>
+    </div>
+    <div class="dashboard-scope" id="dashboardScopeText">Menampilkan seluruh data.</div>
+    <div class="dashboard-kpis" id="dashboardKpis"></div>
+
+    <div class="dashboard-section-title"><h3>Ringkasan Management</h3><span>Volume aktivitas, status, dan tindak lanjut</span></div>
+    <div class="dashboard-grid">
+      <div class="dashboard-card"><h4>Tren laporan per bulan</h4><p class="chart-sub">Jumlah kartu SRF yang memiliki tanggal report pada setiap bulan. Kartu hasil merge dapat terkait dengan lebih dari satu tanggal report.</p><div id="dashboardTrend"></div></div>
+      <div class="dashboard-card"><h4>Status SRF</h4><p class="chart-sub">Distribusi status pekerjaan dalam data yang sedang difilter.</p><div id="dashboardStatusChart"></div></div>
+    </div>
+    <div class="dashboard-grid">
+      <div class="dashboard-card"><h4>Progress administrasi</h4><p class="chart-sub">Status checklist Estimasi dan Aktual pada kartu SRF.</p><div id="dashboardWorkflow"></div></div>
+      <div class="dashboard-card"><h4>Ringkasan kualitas data</h4><p class="chart-sub">Jumlah kartu yang memiliki konflik atau informasi penting yang belum terbaca/diisi.</p><div class="quality-grid" id="dashboardQuality"></div></div>
+    </div>
+
+    <div class="dashboard-section-title"><h3>Analisis Operasional</h3><span>Jenis pekerjaan, lokasi, dan kebutuhan tenaga kerja</span></div>
+    <div class="dashboard-grid four">
+      <div class="dashboard-card"><h4>Klasifikasi scaffold</h4><p class="chart-sub">Jumlah SRF menurut klasifikasi.</p><div id="dashboardClassification"></div></div>
+      <div class="dashboard-card"><h4>Scope pekerjaan</h4><p class="chart-sub">Erection, modification, dismantling, dan lainnya.</p><div id="dashboardScope"></div></div>
+      <div class="dashboard-card"><h4>Jenis material</h4><p class="chart-sub">Distribusi material pada laporan.</p><div id="dashboardMaterial"></div></div>
+      <div class="dashboard-card"><h4>Lokasi pekerjaan</h4><p class="chart-sub">Lokasi dengan jumlah pekerjaan terbanyak.</p><div id="dashboardLocationChart"></div></div>
+    </div>
+    <div class="dashboard-grid">
+      <div class="dashboard-card"><h4>Keterlibatan supervisor</h4><p class="chart-sub">Jumlah kartu SRF per supervisor.</p><div id="dashboardSupervisors"></div></div>
+      <div class="dashboard-card"><h4>Keterlibatan foreman</h4><p class="chart-sub">Jumlah kartu SRF per foreman.</p><div id="dashboardForemen"></div></div>
+    </div>
+
+    <div class="dashboard-section-title"><h3>Analisis Crew & Reporter</h3><span>Kontribusi personel dan aktivitas input</span></div>
+    <div class="dashboard-grid">
+      <div class="dashboard-card"><h4>Top crew</h4><p class="chart-sub">Jumlah kartu SRF yang melibatkan crew dan akumulasi jam individu jika jam tersedia pada data.</p><div class="dash-table-wrap" id="dashboardCrewTable"></div></div>
+      <div class="dashboard-card"><h4>Aktivitas reporter</h4><p class="chart-sub">Jumlah kartu SRF yang tercatat atas nama masing-masing reporter.</p><div class="dash-table-wrap" id="dashboardReporterTable"></div></div>
+    </div>
+    <div class="dashboard-grid">
+      <div class="dashboard-card"><h4>Keterlibatan inspector</h4><p class="chart-sub">Jumlah kartu SRF per inspector.</p><div id="dashboardInspectors"></div></div>
+      <div class="dashboard-card"><h4>Catatan pembacaan statistik</h4><p class="chart-sub">Batas interpretasi data yang perlu diketahui sebelum menggunakan angka untuk evaluasi.</p><div class="dashboard-footnote">Jam kerja adalah jam yang tercatat pada laporan SRF; bukan otomatis jam individu setiap crew. Jam individu hanya ditampilkan jika dicantumkan secara khusus pada data crew; jam tingkat hari tidak otomatis dianggap sebagai jam setiap individu. Volume dihitung dari dimensi yang tersimpan di tiap kartu dan mengikuti logika deduplikasi dimensi harian aplikasi. Rasio volume/jam hanya indikator kasar, bukan produktivitas standar karena belum memperhitungkan jumlah crew, kompleksitas, atau jenis pekerjaan. Data yang tidak terisi tidak dianggap nol produktivitas. Kartu merge dengan beberapa reporter dihitung sebagai kontribusi pada masing-masing reporter.</div></div>
+    </div>
+  </section>
+
+    </div>
+
+  <div class="page-view" id="inputView">
+    <div class="view-intro"><div><h1>Input &amp; Spreadsheet SRF</h1><p>Paste laporan baru, periksa hasil parsing, dan kelola data pekerjaan.</p></div><a class="view-link" href="#dashboard">▦ Buka Dashboard</a></div>
+
+  <section class="panel">
+    <div class="section-head"><div><h2>1. Paste laporan SRF</h2><p>Boleh paste satu atau beberapa laporan. Mendukung format satu hari maupun Day 1, Day 2, dan seterusnya. Crew yang muncul berulang digabung. Jam dalam kurung tidak ditampilkan pada nama crew; crew berstatus Cuti/MC dikecualikan kecuali muncul lagi pada hari lain.</p></div><span class="tag">AUTO PARSE</span></div>
+    <div class="report-meta-grid">
+      <div class="report-meta-item">
+        <label for="reportDateInput">Tanggal Report</label>
+        <input id="reportDateInput" type="date" required aria-describedby="reportDateHelp" />
+        <small id="reportDateHelp">Pilih tanggal pencatatan laporan. Pilihan terakhir akan diingat di browser ini.</small>
+      </div>
+      <div class="report-meta-item">
+        <label for="reporterInput">Reporter / Input By</label>
+        <input id="reporterInput" type="text" autocomplete="name" placeholder="Masukkan nama reporter" />
+        <small>Nama ini berlaku untuk semua laporan yang dipaste dan diingat di browser ini.</small>
+      </div>
+    </div>
+    <textarea id="pasteArea" spellcheck="false" placeholder="Paste laporan SRF Anda di sini...&#10;&#10;Requestor : Nama&#10;SRF : TENNET ...&#10;Status SRF : Completed&#10;Lokasi : ...&#10;Aktual Kubik Meter [ PxLxT ] m : 7*1.5*4&#10;Aktual Jam Kerja : 10 jam&#10;Nama Supv : ...&#10;Nama Fman : ...&#10;Inspektur : ...&#10;Nama Crew :&#10;1. Nama crew 1&#10;2. Nama crew 2"></textarea>
+    <div class="actions">
+      <button class="btn primary" id="addButton">Parse &amp; masukkan ke spreadsheet</button>
+      <button class="btn secondary" id="clearPasteButton">Kosongkan teks</button>
+      <button class="btn outline" id="loadExampleButton">Muat contoh</button>
+      <span class="hint">Data tersimpan otomatis di browser ini.</span>
+    </div>
+    <div class="notice"><strong>Catatan:</strong> aplikasi ini berjalan secara lokal di browser. Data tidak dikirim ke server. Nomor SRF sama dengan identitas berbeda akan otomatis dipisahkan dan ditandai pada kolom Catatan Konflik. Ekspor file Excel secara berkala sebagai backup.</div>
+  </section>
+
+  <section class="panel">
+    <div class="section-head"><div><h2>2. Spreadsheet SRF</h2><p>Nomor SRF sama akan ditawarkan untuk digabung jika minimal dua detail utama (Requestor, Tag Number, Lokasi) cocok dan tidak ada perbedaan pada detail identitas lain yang sama-sama terisi (Supervisor, Foreman, Inspector). Jika berbeda atau data utama belum cukup, aplikasi otomatis memisahkan laporan serta mencatat alasannya. Perubahan nama crew antar-hari tidak dianggap konflik.</p><p>Pada kartu dengan nomor SRF duplikat, gunakan tombol <strong>Merge</strong> untuk memilih kartu tujuan. Jika identitas berbeda, aplikasi akan menampilkan peringatan dan meminta konfirmasi. Centang <strong>Estimasi</strong> dan/atau <strong>Aktual</strong> untuk menandai tahap input.</p></div><span class="tag" id="recordTag">0 ROWS</span></div>
+    <div class="table-tools">
+      <input class="search" id="searchInput" type="search" placeholder="Cari SRF, reporter, lokasi, foreman, inspector..." />
+      <div class="date-filter-group"><label for="reportDateFilter">Tanggal Report:</label><input class="date-filter" id="reportDateFilter" type="date" aria-label="Filter berdasarkan Tanggal Report" title="Pilih tanggal report untuk menyaring laporan" /><button class="clear-date-filter" id="clearReportDateFilter" type="button" title="Tampilkan semua tanggal">Semua tanggal</button></div>
+      <button class="btn primary" id="exportXlsxButton">Export Excel (.xlsx)</button>
+      <button class="btn secondary" id="exportCsvButton">Export CSV</button>
+      <button class="btn danger" id="deleteAllButton">Hapus semua data</button>
+    </div>
+    <div class="table-wrap"><div class="record-list" id="recordList"></div><div class="empty" id="emptyState" hidden>Belum ada data yang cocok. Paste laporan SRF di atas untuk mulai mengisi spreadsheet.</div></div>
+  </section>
+  </div>
+    <div class="footer">SRF Management Workspace · Versi 1.17 · Halaman input dan dashboard terpisah · Navigasi dua arah · Flexible multi-format parser · Multi-filter analitik · Penyimpanan lokal pada browser</div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script>
+const STORAGE_KEY = 'srf-paste-spreadsheet-v1';
+const REPORTER_KEY = 'srf-paste-spreadsheet-reporter-v1';
+const REPORT_DATE_KEY = 'srf-paste-spreadsheet-report-date-v1';
+const exampleText = `1. Requestor : Contoh Requestor
+SRF : TEST-SRF-001
+Status SRF : Completed
+Tag Number : -
+Lokasi : Contoh Lokasi
+Klasifikasi Scaffold : Medium
+Jenis Material : Tube & Fitting
+Desain Scaffold : Tower
+Scope Scaffold : Erection
+Aktual Kubik Meter [ PxLxT ] m : 6*2*5
+Aktual Jam Kerja : 8 jam
+Nama Supv : Contoh Supervisor
+Nama Fman : Contoh Foreman
+Inspektur : Contoh Inspector
+Nama Crew :
+1. Nama Crew A
+2. Nama Crew B
+3. Nama Crew C`;
+const seedRecords = [];
+let records = consolidateExistingRecords(loadRecords().map(r=>{const clean={...r,srf:srfNumber(r.srf)};delete clean.jobNumber;return clean;}));
+function loadRecords(){try{const raw=localStorage.getItem(STORAGE_KEY);return raw?JSON.parse(raw):[]}catch(e){return []}}
+function persist(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(records))}catch(e){console.warn('Penyimpanan browser tidak tersedia',e)}}
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function num(v){if(v===undefined||v===null||v==='')return null;const n=Number(String(v).trim().replace(',','.'));return Number.isFinite(n)?n:null}
+function parseDimensions(s){
+ const text=String(s||'');
+ const m=text.match(/([0-9]+(?:[.,][0-9]+)?)\s*[*x×]\s*([0-9]+(?:[.,][0-9]+)?)\s*[*x×]\s*([0-9]+(?:[.,][0-9]+)?)/i);
+ if(!m)return {length:null,width:null,height:null,volume:null,multiplier:1};
+ const a=num(m[1]),b=num(m[2]),c=num(m[3]);
+ const tail=text.slice((m.index||0)+m[0].length);
+ const mult=tail.match(/\(\s*[x×]\s*(\d+(?:[.,]\d+)?)\s*\)/i);
+ const multiplier=mult?num(mult[1])||1:1;
+ return {length:a,width:b,height:c,multiplier,volume:a*b*c*multiplier};
+}
+function normalizeDateText(value){
+ let s=String(value||'').replace(/[()*_~]/g,' ').replace(/\s+/g,' ').trim();
+ const m=s.match(/(?:senin|selasa|rabu|kamis|jumat|jum'at|jum\s*at|sabtu|minggu)?\s*,?\s*\d{1,2}[-/.]\d{1,2}[-/.]\d{2,4}/i);
+ return m?m[0].replace(/^\s*,|\s*,$/g,'').trim():s;
+}
+function parseCrewEntry(raw){
+ let line=String(raw||'').trim().replace(/\\([.*()\-])/g,'$1').replace(/\*{1,2}/g,'').trim();
+ for(let i=0;i<3;i++){line=line.replace(/^[\s\-*•‣▪~>→·–—_=+#™℠©®]+/u,'').replace(/^\d+\s*[.)]\s*/,'').trim();}
+ if(!line)return null;
+ let hours=null,absent=false;
+ const absenceMatch=line.match(/\(\s*(cuti|mc)\s*\)\s*$/i);
+ if(absenceMatch){absent=true;line=line.slice(0,absenceMatch.index).trim();}
+ const hourMatch=line.match(/\(\s*([0-9]+(?:[.,][0-9]+)?)\s*(?:jam|hours?)\s*\)\s*$/i)||line.match(/\s+([0-9]+(?:[.,][0-9]+)?)\s*(?:jam|hours?)\s*$/i);
+ if(hourMatch){hours=num(hourMatch[1]);line=line.slice(0,hourMatch.index).trim();}
+ line=line.replace(/[\s,;.]+$/,'').replace(/\s+/g,' ').trim();
+ if(!line||/^(?:complete|completed)$/i.test(line.replace(/[.!?]+$/g,'')))return null;
+ return {name:line,hours,absent};
+}
+function parseStoredCrewEntry(entry){
+ const parsed=parseCrewEntry(typeof entry==='string'?entry:entry?.name);
+ if(parsed&&entry&&typeof entry==='object'){
+  if(entry.absent)parsed.absent=true;
+  if(entry.hours!==undefined&&entry.hours!==null)parsed.hours=num(entry.hours);
+ }
+ return parsed;
+}
+function normalizeCrewName(name){return String(name||'').normalize('NFKC').trim().replace(/\s+/g,' ').toLocaleLowerCase('id-ID')}
+function crewEntries(r){
+ const source=(r.dayDetails||[]).length?aggregateDayCrew(r.dayDetails):(r.crew||[]);
+ return source.map(parseStoredCrewEntry).filter(x=>x&&x.name&&!x.absent);
+}
+function crewLabel(x){return x.name}
+function parseDayHeader(line){
+ const clean=String(line||'').trim().replace(/^\d+\s*[.)]\s*/,'').replace(/^[\s*_~\-•>\\]+/u,'').replace(/[\s*_~\\]+$/u,'').replace(/\\([()])/g,'$1');
+ const m=clean.match(/^(?:(?:continue|countine)\s+)?(?:day|hari)\s*(?:ke\s*)?[-]?\s*(\d+)\s*[:\-–]?\s*(.*)$/i);
+ if(!m)return null;
+ const value=m[2]||'';
+ const date=normalizeDateText(value.match(/\(?\s*(?:(?:senin|selasa|rabu|kamis|jum(?:at|'at)|sabtu|minggu)\s*,?\s*)?\d{1,2}[-/.]\d{1,2}[-/.]\d{2,4}\s*\)?/i)?.[0]||'');
+ const hm=value.match(/([0-9]+(?:[.,][0-9]+)?)\s*jam/i);
+ return {day:Number(m[1]),hours:hm?num(hm[1]):null,date,crew:[],dimensions:'',inferred:false};
+}
+function dayHeaderFromStatus(value){
+ const m=String(value||'').match(/^(?:continue|countine)\s+(?:day|hari)\s*(\d+)\b(.*)$/i);
+ if(!m)return null;
+ const day=parseDayHeader('Day '+m[1]+' '+(m[2]||''));
+ return day;
+}
+function aggregateDayCrew(days){
+ const map=new Map();
+ days.forEach(day=>{
+  const seenToday=new Set();
+  (day.crew||[]).forEach(entry=>{
+   const c=parseStoredCrewEntry(entry);
+   if(!c||!c.name||c.absent)return;
+   const key=normalizeCrewName(c.name);if(!key||seenToday.has(key))return;seenToday.add(key);
+   if(!map.has(key))map.set(key,{name:c.name,hours:null});
+   const row=map.get(key),h=c.hours!==null&&c.hours!==undefined?c.hours:num(day.hours);
+   if(h!==null&&h!==undefined)row.hours=(row.hours??0)+h;
+  });
+ });
+ return [...map.values()];
+}
+const FIELD_RULES=[
+ [/^status srf$/,'status'],
+ [/^status( kerja| pekerjaan)?$/,'statusWork'],
+ [/^(no )?srf( no| number| nomor)?$/,'srf'],
+ [/^(requestor|requester|pemohon|request by)$/,'requestor'],
+ [/^(reporter|reporter input by|input by|reported by)$/,'reporter'],
+ [/^job ?(number|no|nomor)$/,'jobNumber'],
+ [/^tag ?(number|no|nomor)$/,'tagNumber'],
+ [/^(lokasi|location|area)( kerja)?$/,'location'],
+ [/^(klasifikasi|jenis scaffold|jenis scaffolding)/,'classification'],
+ [/^(jenis )?material$/,'material'],
+ [/^(desain|design)/,'design'],
+ [/^scope/,'scope'],
+ [/^(nama )?(spv|supv|spvr|supervisor|supervisior|super visor|supervisi)$/,'supervisor'],
+ [/^(nama )?(f m|fm|fman|foreman|forman|foremen)$/,'foreman'],
+ [/^(nama )?(inspektur|inspector|inspektor|insp|inspk|inspekt|inspek)$/,'inspector'],
+ [/^(aktual |actual )?jam( kerja)?( aktual| actual)?$/,'hours'],
+ [/^(aktual |actual )?(kubik|kubikasi)|^(aktual|actual)$/,'dimensions'],
+ [/^(tanggal|date|tanggal kerja)$/,'workDate']
+];
+function fieldFromLine(line){
+ const p=line.indexOf(':');if(p<0)return null;
+ let label=line.slice(0,p).toLowerCase().normalize('NFKC').replace(/^[\s\\\-*•~>\d.)™]+/u,'').replace(/[._-]/g,' ').replace(/\//g,' ').replace(/\s+/g,' ').trim();
+ if(!label||label.length>55)return null;
+ for(const [re,key] of FIELD_RULES){if(re.test(label))return {key,value:line.slice(p+1).trim()};}
+ return null;
+}
+const STOP_WORDS=/^(terima kasih|thanks?|thank you|selesai|done|complete(?:d)?|oke?|siap|demikian.*|laporan.*|mohon.*|--+|__+|==+)$/i;
+const WEEKDAY_LINE=/^(senin|selasa|rabu|kamis|jum(?:at|'at)|jum\s*at|sabtu|minggu)$/i;
+function isMarkedLine(l){return /^\s*(?:[-*•‣▪~>→·–—]|\d+\s*[.)]|[™℠©®])\s*\S/u.test(l)}
+function looksLikeName(l){
+ if(/[:=]/.test(l))return false;
+ const c=parseCrewEntry(l);if(!c||STOP_WORDS.test(c.name)||/\d/.test(c.name))return false;
+ if(WEEKDAY_LINE.test(c.name)||/^\d{1,2}[-/.]\d{1,2}[-/.]\d{2,4}$/.test(c.name))return false;
+ return c.name.split(' ').length<=6&&/^[\p{L}][\p{L} .'’()\-]*$/u.test(c.name);
+}
+function isCrewHeader(line){return /^(?:nama\s*)?(?:crew|anggota|personil|personel|manpower)\s*(?::\s*(.*))?$/i.exec(line.trim())}
+function normalizeStatus(value){
+ let v=String(value||'').trim();
+ if(/^countine\b/i.test(v))v=v.replace(/^countine/i,'Continue');
+ const day=dayHeaderFromStatus(v);
+ if(day)return 'Continue';
+ return v;
+}
+function normalizeReportText(text){
+ return String(text||'').replace(/\\([.*()\-])/g,'$1').replace(/&#x20;|&nbsp;/gi,' ').replace(/&amp;/gi,'&').replace(/\u00a0/g,' ').replace(/\r/g,'');
+}
+function parseChunk(chunk){
+ const lines=normalizeReportText(chunk).split(/\n/).map(x=>x.trim());
+ const data={requestor:'',reporter:'',srf:'',status:'',statusWork:'',tagNumber:'',location:'',classification:'',material:'',design:'',scope:'',dimensions:'',hours:null,days:0,dayDetails:[],supervisor:'',foreman:'',inspector:'',crew:[],unparsed:[],declaredHours:null};
+ const preDay={hours:null,date:'',dimensions:'',crew:[]};
+ let crewMode=false,currentDay=null,pendingCrewHours=null,seenField=false;
+ const finishDay=()=>{
+  if(!currentDay)return;
+  const seen=new Map();
+  currentDay.crew.forEach(entry=>{const c=parseStoredCrewEntry(entry);const key=normalizeCrewName(c?.name);if(!key)return;const prior=seen.get(key);if(!prior||prior.absent&&!c.absent)seen.set(key,entry);});
+  currentDay.crew=[...seen.values()];
+  currentDay.dayDetailsComplete=true;data.dayDetails.push(currentDay);currentDay=null;pendingCrewHours=null;crewMode=false;
+ };
+ const addCrew=(line)=>{
+  const c=parseCrewEntry(line);if(!c)return false;
+  if((c.hours===null||c.hours===undefined)&&pendingCrewHours!==null)c.hours=pendingCrewHours;
+  if(currentDay)currentDay.crew.push(c);else preDay.crew.push(c);
+  return true;
+ };
+ for(let i=0;i<lines.length;i++){
+  let line=lines[i].trim();if(!line)continue;
+  line=line.replace(/^\d+\s*[.)]\s*(?=Requestor\s*:)/i,'').trim();
+  line=line.replace(/\\([.*()\-])/g,'$1');
+  if(/^[-_=]{3,}$/.test(line))continue;
+  const dayHeader=parseDayHeader(line);
+  if(dayHeader){finishDay();currentDay=dayHeader;crewMode=false;pendingCrewHours=null;continue;}
+  const hourMarker=line.match(/^([0-9]+(?:[.,][0-9]+)?)\s*(?:jam|hours?)\s*:?$/i);
+  if(hourMarker&&(currentDay||crewMode||preDay.crew.length)){
+   pendingCrewHours=num(hourMarker[1]);crewMode=true;continue;
+  }
+  if(WEEKDAY_LINE.test(line)){continue;}
+  if(/^\d{1,2}[-/.]\d{1,2}[-/.]\d{2,4}$/.test(line)){
+   if(currentDay)currentDay.date=line;else preDay.date=line;
+   continue;
+  }
+  const crewHeader=isCrewHeader(line);
+  if(crewHeader){crewMode=true;const inline=(crewHeader[1]||'').trim();if(inline)inline.split(/[,;]+/).forEach(x=>addCrew(x));continue;}
+  const field=fieldFromLine(line);
+  if(field){seenField=true;crewMode=false;
+   if(field.key==='jobNumber'){continue;}
+   if(field.key==='hours'){
+    const h=field.value.match(/[0-9]+(?:[.,][0-9]+)?/);const value=h?num(h[0]):null;
+    if(currentDay)currentDay.hours=value;else preDay.hours=value;
+   }else if(field.key==='dimensions'){
+    if(currentDay)currentDay.dimensions=field.value;else preDay.dimensions=field.value;
+    data.dimensions=field.value;
+   }else if(field.key==='workDate'){
+    const date=normalizeDateText(field.value);
+    if(currentDay)currentDay.date=date;else preDay.date=date;
+   }else if(field.key==='status'){
+    data.status=normalizeStatus(field.value);
+    const embeddedDay=dayHeaderFromStatus(field.value);
+    if(embeddedDay){finishDay();currentDay=embeddedDay;}
+   }else if(field.key==='statusWork'){
+    data.statusWork=field.value;
+   }else if(field.key==='srf')data.srf=srfNumber(field.value);
+   else data[field.key]=field.value;
+   continue;
+  }
+  if(/[:]/.test(line)&&!isMarkedLine(line)){data.unparsed.push(line);continue;}
+  if(currentDay&&(isMarkedLine(line)||looksLikeName(line))){if(addCrew(line))continue;}
+  if(crewMode&&(isMarkedLine(line)||looksLikeName(line))){if(addCrew(line))continue;}
+  if(seenField&&(isMarkedLine(line)||looksLikeName(line))){if(addCrew(line))continue;}
+  if(/^(?:complete|completed)$/i.test(line.replace(/[.!?]+$/g,'')))continue;
+  if(seenField)data.unparsed.push(line);
+ }
+ finishDay();
+ const explicitDays=data.dayDetails.slice().sort((a,b)=>a.day-b.day);
+ const hasPreDay=preDay.hours!==null||preDay.crew.length>0||!!preDay.dimensions||!!preDay.date;
+ if(explicitDays.length){
+  if(explicitDays[0].day>1&&hasPreDay){
+   const inferredNo=explicitDays[0].day-1;
+   const inferred={day:inferredNo,hours:preDay.hours,date:preDay.date,dimensions:preDay.dimensions,crew:preDay.crew,inferred:true};
+   data.dayDetails.unshift(inferred);
+   data.unparsed.push('Data sebelum Day '+explicitDays[0].day+' diasumsikan sebagai Day '+inferredNo+' karena tidak ada header hari yang eksplisit.');
+  }else if(preDay.crew.length&&explicitDays.every(d=>!d.crew.length)){
+   explicitDays.forEach(d=>d.crew=preDay.crew.map(c=>({...c})));
+  }
+  data.dayDetails=data.dayDetails.sort((a,b)=>a.day-b.day);
+  data.days=data.dayDetails.length;
+  const dayHourSum=data.dayDetails.reduce((sum,d)=>sum+(Number(d.hours)||0),0);
+  if(data.dayDetails.some(d=>d.inferred))data.hours=dayHourSum;
+  else if(preDay.hours!==null){data.declaredHours=preDay.hours;data.hours=preDay.hours;}
+  else data.hours=data.dayDetails.some(d=>d.hours!==null)?dayHourSum:null;
+  const latestDimension=[...data.dayDetails].reverse().find(d=>d.dimensions)?.dimensions;
+  data.dimensions=latestDimension||preDay.dimensions||data.dimensions;
+  data.crew=aggregateDayCrew(data.dayDetails);
+ }else{
+  data.hours=preDay.hours;data.dimensions=preDay.dimensions||data.dimensions;data.crew=preDay.crew.filter(entry=>{const c=parseStoredCrewEntry(entry);return c&&!c.absent;});
+ }
+ const d=parseDimensions(data.dimensions);Object.assign(data,d);
+ let inheritedDimensions=preDay.dimensions||'';
+ data.dayDetails=data.dayDetails.map(day=>{
+  if(day.dimensions)inheritedDimensions=day.dimensions;
+  else if(inheritedDimensions)day.dimensions=inheritedDimensions;
+  const dd=parseDimensions(day.dimensions||'');
+  return {...day,length:dd.length,width:dd.width,height:dd.height,volume:dd.volume,multiplier:dd.multiplier};
+ });
+ if(data.declaredHours!==null&&data.dayDetails.some(d=>d.hours!==null)){
+  const dayTotal=data.dayDetails.reduce((sum,d)=>sum+(Number(d.hours)||0),0);
+  if(Math.abs(data.declaredHours-dayTotal)>0.001)data.hoursMismatch={declared:data.declaredHours,days:dayTotal};
+ }
+ data.id='srf-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,8);
+ return data;
+}
+function parseReports(text){
+ const cleaned=normalizeReportText(text).trim();if(!cleaned)return [];
+ const lines=cleaned.split(/\n/);const chunks=[];let current=[];
+ let seenSrf=false,seenRequestor=false,dayContext=false,sawCrew=false,sawTerminalStatus=false,currentRequestor='',currentSrf='';
+ const reset=()=>{seenSrf=false;seenRequestor=false;dayContext=false;sawCrew=false;sawTerminalStatus=false;currentRequestor='';currentSrf='';};
+ for(const raw of lines){
+  const line=raw.trim();const field=fieldFromLine(line);
+  const startField=field&&['srf','requestor'].includes(field.key);
+  let changedIdentity=false;
+  if(startField&&field.key==='requestor'&&currentRequestor&&identityText(field.value)!==identityText(currentRequestor))changedIdentity=true;
+  if(startField&&field.key==='srf'&&currentSrf&&srfNumber(field.value)!==srfNumber(currentSrf))changedIdentity=true;
+  if(startField&&(seenSrf||seenRequestor)&&((!dayContext&&(sawTerminalStatus||sawCrew))||changedIdentity)){
+   let carry=[];
+   if(changedIdentity){
+    let lastBlank=-1;for(let j=current.length-1;j>=0;j--){if(!String(current[j]||'').trim()){lastBlank=j;break;} }
+    if(lastBlank>=0)carry=current.splice(lastBlank+1);
+   }
+   if(current.length)chunks.push(current.join('\n'));
+   current=carry;reset();
+  }
+  current.push(raw);
+  if(parseDayHeader(line))dayContext=true;
+  if(field){
+   if(field.key==='srf'){seenSrf=true;currentSrf=field.value;}
+   if(field.key==='requestor'){seenRequestor=true;currentRequestor=field.value;}
+   if(field.key==='status'&&dayHeaderFromStatus(field.value))dayContext=true;
+   if(field.key==='statusWork'&&(sawCrew||dayContext)){dayContext=false;sawTerminalStatus=true;}
+  }
+  if(isCrewHeader(line)||looksLikeName(line))sawCrew=true;
+ }
+ if(current.length)chunks.push(current.join('\n'));
+ return chunks.map(parseChunk).filter(r=>r.requestor||r.srf);
+}
+function fmt(v){if(v===null||v===undefined||v==='')return '—';return typeof v==='number'?v.toLocaleString('id-ID',{maximumFractionDigits:3}):String(v)}
+function localDateISO(date=new Date()){
+ const y=date.getFullYear(),m=String(date.getMonth()+1).padStart(2,'0'),d=String(date.getDate()).padStart(2,'0');
+ return `${y}-${m}-${d}`;
+}
+function reportDateValues(record){
+ const values=Array.isArray(record?.reportDates)?record.reportDates:[record?.reportDate];
+ return [...new Set(values.map(x=>String(x||'').trim()).filter(x=>/^\d{4}-\d{2}-\d{2}$/.test(x)))];
+}
+function formatReportDate(value){
+ if(!/^\d{4}-\d{2}-\d{2}$/.test(String(value||'')))return '';
+ const [y,m,d]=value.split('-').map(Number);
+ return new Date(Date.UTC(y,m-1,d)).toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric',timeZone:'UTC'});
+}
+function reportDateLabel(record){
+ const dates=reportDateValues(record).map(formatReportDate);
+ return dates.length?dates.join(', '):'Belum diatur (data lama)';
+}
+function recordVolume(r){
+ const days=(r.dayDetails||[]).filter(d=>d.dimensions||d.volume!==null&&d.volume!==undefined);
+ if(days.length){const seen=new Set();return days.reduce((sum,d)=>{const key=String(d.dimensions||d.volume||'').replace(/\s+/g,'').toLowerCase();if(!key||seen.has(key))return sum;seen.add(key);return sum+(Number(d.volume)||0);},0);}
+ return Number(r.volume)||0;
+}
+function dashboardFmt(value, digits=0){
+ const n=Number(value)||0;
+ return n.toLocaleString('id-ID',{maximumFractionDigits:digits});
+}
+function dashboardHasConflict(record){
+ const note=String(record?.conflictNotes||'');
+ return hasDuplicateSrf(record)||/(nomor srf sama|identitas berbeda|belum cukup cocok|dipisah manual|konflik)/i.test(note);
+}
+function dashboardStatusBucket(record){
+ const v=String(record.status||'').trim().toLowerCase();
+ if(/\bcomplete(?:d)?\b|selesai/.test(v))return 'Completed';
+ if(/\bcontinue\b|countine|berlanjut/i.test(v))return 'Continue';
+ return v?'Status lainnya':'Belum diisi';
+}
+function dashboardUnique(values){
+ return [...new Set(values.map(v=>String(v??'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'id-ID'));
+}
+function dashboardSetOptions(id, values, defaultLabel){
+ const el=document.getElementById(id);if(!el)return;
+ const prior=el.value;
+ el.innerHTML='<option value="">'+esc(defaultLabel)+'</option>'+dashboardUnique(values).map(v=>'<option value="'+esc(v)+'">'+esc(v)+'</option>').join('');
+ if(dashboardUnique(values).includes(prior))el.value=prior;
+}
+function dashboardFilterRecords(){
+ const from=document.getElementById('dashboardFrom').value;
+ const to=document.getElementById('dashboardTo').value;
+ const reporter=document.getElementById('dashboardReporter').value;
+ const location=document.getElementById('dashboardLocation').value;
+ const status=document.getElementById('dashboardStatus').value;
+ const classification=document.getElementById('dashboardClass').value;
+ if(from&&to&&from>to)return {items:[],invalidRange:true};
+ const items=records.filter(r=>{
+  const dates=reportDateValues(r);
+  if(from||to){
+   const matchDate=dates.some(d=>(!from||d>=from)&&(!to||d<=to));
+   if(!matchDate)return false;
+  }
+  if(reporter&&!reporterNames(r).includes(reporter))return false;
+  if(location&&String(r.location||'').trim()!==location)return false;
+  if(status&&String(r.status||'').trim()!==status)return false;
+  if(classification&&String(r.classification||'').trim()!==classification)return false;
+  return true;
+ });
+ return {items,invalidRange:false};
+}
+function dashboardBarList(rows, unit='SRF', limit=7){
+ const data=rows.filter(x=>x&&x.label).slice(0,limit);
+ if(!data.length)return '<div class="dash-empty">Belum ada data untuk ditampilkan.</div>';
+ const max=Math.max(1,...data.map(x=>Number(x.value)||0));
+ return '<div class="bar-list">'+data.map(x=>{
+  const value=Number(x.value)||0;const width=value>0?Math.max(2,value/max*100):0;
+  return '<div class="bar-item"><div class="bar-meta"><span title="'+esc(x.label)+'">'+esc(x.label)+'</span><strong>'+dashboardFmt(value,2)+(unit?' '+esc(unit):'')+'</strong></div><div class="bar-track"><div class="bar-fill" style="width:'+width+'%"></div></div></div>';
+ }).join('')+'</div>';
+}
+function dashboardStatusStack(items){
+ const total=items.reduce((s,x)=>s+x.value,0);
+ const colors={'Completed':'#21865d','Continue':'#d49a35','Status lainnya':'#477c9c','Belum diisi':'#aab7c0'};
+ if(!total)return '<div class="dash-empty">Belum ada status SRF.</div>';
+ const stack=items.map(x=>'<span style="width:'+(x.value/total*100)+'%;background:'+(colors[x.label]||'#8b9da9')+'" title="'+esc(x.label)+': '+x.value+'"></span>').join('');
+ const legend=items.map(x=>'<div class="legend-item"><span class="legend-name"><i class="legend-dot" style="background:'+(colors[x.label]||'#8b9da9')+'"></i>'+esc(x.label)+'</span><strong>'+dashboardFmt(x.value)+' ('+(x.value/total*100).toFixed(1)+'%)</strong></div>').join('');
+ return '<div class="status-stack">'+stack+'</div><div class="status-legend">'+legend+'</div>';
+}
+function dashboardTrend(items){
+ const map=new Map();
+ items.forEach(r=>{
+  const months=new Set(reportDateValues(r).map(d=>d.slice(0,7)));
+  months.forEach(key=>map.set(key,(map.get(key)||0)+1));
+ });
+ const rows=[...map.entries()].sort((a,b)=>a[0].localeCompare(b[0])).slice(-8).map(([key,value])=>({label:new Date(key+'-01T00:00:00').toLocaleDateString('id-ID',{month:'short',year:'2-digit'}),value}));
+ if(!rows.length)return '<div class="dash-empty">Tanggal report belum tersedia pada data terpilih.</div>';
+ const max=Math.max(1,...rows.map(x=>x.value));
+ return '<div class="trend-list">'+rows.map(x=>'<div class="trend-col"><span class="trend-val">'+x.value+'</span><div class="trend-bar-wrap"><div class="trend-bar" style="height:'+Math.max(3,x.value/max*100)+'%"></div></div><span class="trend-label" title="'+esc(x.label)+'">'+esc(x.label)+'</span></div>').join('')+'</div>';
+}
+function dashboardTable(headers, rows, emptyText='Belum ada data.'){
+ if(!rows.length)return '<div class="dash-empty">'+esc(emptyText)+'</div>';
+ return '<table class="dash-table"><thead><tr>'+headers.map(h=>'<th>'+esc(h)+'</th>').join('')+'</tr></thead><tbody>'+rows.map(row=>'<tr>'+row.map((cell,i)=>'<td>'+esc(cell??'—')+'</td>').join('')+'</tr>').join('')+'</tbody></table>';
+}
+function dashboardRoleStats(items,key){
+ const map=new Map();
+ items.forEach(r=>{
+  const values=String(r[key]||'').split(/[;,]/).map(x=>x.trim()).filter(Boolean);
+  [...new Set(values)].forEach(name=>map.set(name,(map.get(name)||0)+1));
+ });
+ return [...map.entries()].map(([label,value])=>({label,value})).sort((a,b)=>b.value-a.value||a.label.localeCompare(b.label,'id-ID'));
+}
+function dashboardRenderTables(items){
+ const crewMap=new Map();
+ items.forEach(r=>{
+  const people=crewEntries(r);
+  people.forEach(c=>{
+   const key=normalizeCrewName(c.name);if(!key)return;
+   if(!crewMap.has(key))crewMap.set(key,{name:c.name,reports:0,hours:0,hasExplicitHours:false,days:0});
+   crewMap.get(key).reports++;
+  });
+  if((r.dayDetails||[]).length){
+   r.dayDetails.forEach(day=>{
+    const seenToday=new Set();
+    (day.crew||[]).forEach(raw=>{
+     const c=parseStoredCrewEntry(raw);if(!c||!c.name||c.absent)return;
+     const key=normalizeCrewName(c.name);if(seenToday.has(key))return;seenToday.add(key);
+     const row=crewMap.get(key);if(!row)return;
+     row.days++;
+     if(c.hours!==null&&c.hours!==undefined){row.hours+=Number(c.hours)||0;row.hasExplicitHours=true;}
+    });
+   });
+  }else{
+   const seen=new Set();
+   (r.crew||[]).forEach(raw=>{
+    const c=parseStoredCrewEntry(raw);if(!c||!c.name||c.absent)return;
+    const key=normalizeCrewName(c.name);if(seen.has(key))return;seen.add(key);
+    const row=crewMap.get(key);if(row&&c.hours!==null&&c.hours!==undefined){row.hours+=Number(c.hours)||0;row.hasExplicitHours=true;}
+   });
+  }
+ });
+ const crewRows=[...crewMap.values()].sort((a,b)=>b.reports-a.reports||b.hours-a.hours||a.name.localeCompare(b.name,'id-ID')).slice(0,10);
+ document.getElementById('dashboardCrewTable').innerHTML=renderCrewDashboardTable(crewRows);
+
+ const reporterMap=new Map();
+ items.forEach(r=>{
+  const names=reporterNames(r);const list=names.length?names:['Belum diisi'];
+  [...new Set(list)].forEach(name=>{
+   if(!reporterMap.has(name))reporterMap.set(name,{name,reports:0,conflicts:0});
+   const row=reporterMap.get(name);row.reports++;
+   if(dashboardHasConflict(r))row.conflicts++;
+  });
+ });
+ const reporterRows=[...reporterMap.values()].sort((a,b)=>b.reports-a.reports||a.name.localeCompare(b.name,'id-ID')).slice(0,10).map(x=>[x.name,dashboardFmt(x.reports),dashboardFmt(x.conflicts)]);
+ document.getElementById('dashboardReporterTable').innerHTML=dashboardTable(['Reporter','Kartu tercatat','Kartu berkonflik'],reporterRows,'Data reporter belum tersedia.');
+}
+function renderDashboard(){
+ const allReporters=records.flatMap(r=>reporterNames(r));
+ dashboardSetOptions('dashboardReporter',allReporters,'Semua reporter');
+ dashboardSetOptions('dashboardLocation',records.map(r=>r.location),'Semua lokasi');
+ dashboardSetOptions('dashboardStatus',records.map(r=>r.status||'Belum diisi'),'Semua status');
+ dashboardSetOptions('dashboardClass',records.map(r=>r.classification),'Semua klasifikasi');
+ const filtered=dashboardFilterRecords();const items=filtered.items;
+ const from=document.getElementById('dashboardFrom').value,to=document.getElementById('dashboardTo').value;
+ const dateText=from||to?((from?formatReportDate(from):'awal')+' – '+(to?formatReportDate(to):'terbaru')):'seluruh tanggal';
+ document.getElementById('dashboardScopeText').textContent=filtered.invalidRange?'Rentang tanggal tidak valid: tanggal awal harus sama dengan atau lebih awal dari tanggal akhir.':`Menampilkan ${dashboardFmt(items.length)} dari ${dashboardFmt(records.length)} kartu SRF · Periode ${dateText}. Kartu hasil merge dihitung satu kali sebagai pekerjaan.`;
+ const uniqueSrf=new Set(items.map(r=>srfKey(r.srf)).filter(Boolean)).size;
+ const hours=items.reduce((sum,r)=>sum+(Number(r.hours)||0),0);
+ const volume=items.reduce((sum,r)=>sum+recordVolume(r),0);
+ const crewSet=new Set();items.forEach(r=>crewEntries(r).forEach(c=>crewSet.add(normalizeCrewName(c.name))));
+ const totalDays=items.reduce((sum,r)=>sum+(Number(r.days)||((r.dayDetails||[]).length)||0),0);
+ const completed=items.filter(r=>dashboardStatusBucket(r)==='Completed').length;
+ const conflictSet=new Set(items.filter(dashboardHasConflict).map(r=>r.id));
+ const flagged=items.filter(r=>!!parseWarning(r)||dashboardHasConflict(r)).length;
+ const kpis=[
+  ['Kartu pekerjaan',dashboardFmt(items.length),'Jumlah kartu SRF dalam filter'],
+  ['Nomor SRF unik',dashboardFmt(uniqueSrf),'Nomor SRF setelah normalisasi'],
+  ['Total jam kerja',dashboardFmt(hours,2)+' jam','Jam kerja total yang tercatat'],
+  ['Crew unik',dashboardFmt(crewSet.size),'Nama personel unik dalam filter'],
+  ['Volume tercatat',dashboardFmt(volume,2)+' m³','Dari dimensi pekerjaan yang tersimpan'],
+  ['Volume / jam (indikatif)',hours>0?dashboardFmt(volume/hours,3)+' m³/jam':'—','Rasio agregat; belum dinormalisasi jumlah crew'],
+  ['SRF completed',dashboardFmt(completed),' '+(items.length?(completed/items.length*100).toFixed(1):'0.0')+'% dari kartu pekerjaan'],
+  ['Hari pekerjaan',dashboardFmt(totalDays),'Jumlah hari dari data yang tersedia'],
+  ['Konflik SRF',dashboardFmt(conflictSet.size),'Kartu dengan konflik identitas / nomor duplikat'],
+  ['Perlu review',dashboardFmt(flagged),'Kartu dengan warning parser atau data belum lengkap']
+ ];
+ document.getElementById('dashboardKpis').innerHTML=kpis.map((k,i)=>'<div class="dashboard-kpi"><div class="kpi-label">'+esc(k[0])+'</div><div class="kpi-value">'+esc(k[1])+'</div><div class="kpi-note">'+esc(k[2])+'</div></div>').join('');
+
+ document.getElementById('dashboardTrend').innerHTML=dashboardTrend(items);
+ const statusOrder=['Completed','Continue','Status lainnya','Belum diisi'];
+ const statusMap=new Map(statusOrder.map(x=>[x,0]));items.forEach(r=>statusMap.set(dashboardStatusBucket(r),(statusMap.get(dashboardStatusBucket(r))||0)+1));
+ document.getElementById('dashboardStatusChart').innerHTML=dashboardStatusStack([...statusMap.entries()].filter(x=>x[1]>0).map(([label,value])=>({label,value})));
+ const estimateDone=items.filter(r=>r.estimasiDone).length,actualDone=items.filter(r=>r.aktualDone).length;
+ const workflow=[['Estimasi',estimateDone],['Aktual',actualDone]];
+ document.getElementById('dashboardWorkflow').innerHTML=workflow.map(([name,count])=>'<div class="workflow-row"><strong>'+name+'</strong><div class="workflow-track"><span style="width:'+(items.length?count/items.length*100:0)+'%"></span></div><b>'+dashboardFmt(count)+'/'+dashboardFmt(items.length)+'</b></div>').join('')||'<div class="dash-empty">Belum ada data.</div>';
+ const quality=[
+  ['Konflik / duplikat',conflictSet.size,conflictSet.size?'warn':'good'],
+  ['Tanpa crew',items.filter(r=>!crewEntries(r).length).length,'warn'],
+  ['Jam kosong',items.filter(r=>r.hours===null||r.hours===undefined||r.hours==='').length,'warn'],
+  ['Dimensi kosong',items.filter(r=>!r.dimensions||!Number(r.volume)).length,'warn'],
+  ['Supervisor kosong',items.filter(r=>!String(r.supervisor||'').trim()).length,'warn'],
+  ['Foreman kosong',items.filter(r=>!String(r.foreman||'').trim()).length,'warn'],
+  ['Inspector kosong',items.filter(r=>!String(r.inspector||'').trim()).length,'warn'],
+  ['Reporter kosong',items.filter(r=>!reporterNames(r).length).length,'warn']
+ ];
+ document.getElementById('dashboardQuality').innerHTML=quality.map(([name,value,kind])=>'<div class="quality-item '+(value===0?'good':kind)+'"><strong>'+dashboardFmt(value)+'</strong><span>'+esc(name)+'</span></div>').join('');
+
+ const tally=(key)=>{
+  const map=new Map();items.forEach(r=>{const v=String(r[key]||'').trim()||'Belum diisi';map.set(v,(map.get(v)||0)+1)});
+  return [...map.entries()].map(([label,value])=>({label,value})).sort((a,b)=>b.value-a.value||a.label.localeCompare(b.label,'id-ID'));
+ };
+ document.getElementById('dashboardClassification').innerHTML=dashboardBarList(tally('classification'));
+ document.getElementById('dashboardScope').innerHTML=dashboardBarList(tally('scope'));
+ document.getElementById('dashboardMaterial').innerHTML=dashboardBarList(tally('material'));
+ document.getElementById('dashboardLocationChart').innerHTML=dashboardBarList(tally('location'));
+ document.getElementById('dashboardSupervisors').innerHTML=dashboardBarList(dashboardRoleStats(items,'supervisor'));
+ document.getElementById('dashboardForemen').innerHTML=dashboardBarList(dashboardRoleStats(items,'foreman'));
+ document.getElementById('dashboardInspectors').innerHTML=dashboardBarList(dashboardRoleStats(items,'inspector'));
+ dashboardRenderTables(items);
+}
+function copyIconSvg(){
+ return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="13" height="13" rx="2"></rect><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"></path></svg>';
+}
+function copiedIconSvg(){
+ return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"></path></svg>';
+}
+function crewCopyControl(name,compact=false){
+ const clean=String(name??'').trim();if(!clean)return '';
+ return `<span class="crew-copy-item${compact?' compact':''}"><span class="crew-copy-name">${esc(clean)}</span><button type="button" class="copy-crew-btn" data-copy-crew="${esc(clean)}" title="Copy nama crew: ${esc(clean)}" aria-label="Copy nama crew ${esc(clean)}">${copyIconSvg()}</button></span>`;
+}
+function renderCrewCopyList(record){
+ const people=crewEntries(record);
+ if(!people.length)return '—';
+ return '<div class="crew-copy-list">'+people.map(person=>crewCopyControl(crewLabel(person))).join('')+'</div>';
+}
+function renderCrewDashboardTable(rows){
+ if(!rows.length)return '<div class="dash-empty">Nama crew belum tersedia.</div>';
+ return '<table class="dash-table"><thead><tr><th>Crew</th><th>Kartu SRF</th><th>Jam tercatat</th><th>Hari hadir*</th></tr></thead><tbody>'+rows.map(x=>'<tr><td>'+crewCopyControl(x.name,true)+'</td><td>'+dashboardFmt(x.reports)+'</td><td>'+(x.hasExplicitHours?dashboardFmt(x.hours,2)+' jam':'—')+'</td><td>'+(x.days?dashboardFmt(x.days)+' hari':'—')+'</td></tr>').join('')+'</tbody></table>';
+}
+async function copyCrewNameToClipboard(name){
+ const value=String(name??'').trim();if(!value)throw new Error('Nama crew kosong');
+ if(navigator.clipboard&&window.isSecureContext){
+  try{await navigator.clipboard.writeText(value);return;}catch(error){}
+ }
+ const area=document.createElement('textarea');area.value=value;area.setAttribute('readonly','');area.style.position='fixed';area.style.opacity='0';area.style.pointerEvents='none';area.style.left='-9999px';
+ document.body.appendChild(area);area.select();area.setSelectionRange(0,area.value.length);
+ let copied=false;try{copied=document.execCommand('copy');}finally{area.remove();}
+ if(!copied)throw new Error('Browser tidak mengizinkan penyalinan otomatis');
+}
+function render(){
+ const q=document.getElementById('searchInput').value.toLowerCase().trim();
+ const selectedReportDate=document.getElementById('reportDateFilter').value;
+ const filtered=records.filter(r=>{
+  const matchesDate=!selectedReportDate||reportDateValues(r).includes(selectedReportDate);
+  const matchesSearch=!q||[r.srf,r.reporter,reporterLabel(r),reportDateLabel(r),r.conflictNotes,r.location,r.foreman,r.inspector,r.supervisor,r.requestor,r.status].join(' ').toLowerCase().includes(q);
+  return matchesDate&&matchesSearch;
+ });
+ const list=document.getElementById('recordList');
+ const rows=[['SRF',r=>r.srf],['Tanggal Report',r=>reportDateLabel(r)],['Reporter / Input By',r=>reporterLabel(r)],['Requestor',r=>r.requestor],['Status SRF',r=>r.status],['Tag Number',r=>r.tagNumber],['Lokasi',r=>r.location],['Klasifikasi Scaffold',r=>r.classification],['Jenis Material',r=>r.material],['Desain Scaffold',r=>r.design],['Scope Scaffold',r=>r.scope],['Aktual Kubik Meter (P×L×T)',r=>r.dimensions],['Total Jam Kerja',r=>fmt(r.hours)+' jam'],['Jumlah Hari',r=>fmt(r.days||'—')],['Nama Supv',r=>r.supervisor],['Nama F/M',r=>r.foreman],['Nama Insp',r=>r.inspector],['Nama Crew',r=>crewEntries(r).map(crewLabel).join('\n')],['Jumlah Crew',r=>crewEntries(r).length],['Catatan Konflik',r=>compactConflictNotes(r)||'—'],['Estimasi',r=>r.estimasiDone?'Sudah':'Belum'],['Aktual',r=>r.aktualDone?'Sudah':'Belum']];
+ list.innerHTML=filtered.map((r,i)=>`<article class="record-card"><div class="record-title"><span>SRF ${esc(r.srf||'—')}${parseWarning(r)?'<span class="duplicate-flag" title="'+esc(parseWarning(r))+'">⚠ '+esc(parseWarning(r))+'</span>':''}${hasDuplicateSrf(r)?'<span class="duplicate-flag" title="Nomor SRF ini dipakai oleh lebih dari satu data pekerjaan">! Nomor SRF sama – cek data</span>':''}${r.conflictNotes?'<span class="duplicate-flag" title="Lihat kolom Catatan Konflik">⚠ KONFLIK</span>':''}</span><span class="muted">#${i+1}</span></div><table class="record-fields"><tbody>${rows.map(([label,get])=>{const cell=label==='Nama Crew'?renderCrewCopyList(r):(esc(get(r)??'—')||'—');return `<tr class="${label==='Catatan Konflik'&&r.conflictNotes?'conflict-note':''}"><td>${esc(label)}</td><td style="white-space:pre-line">${cell}</td></tr>`;}).join('')}</tbody></table><div class="record-actions"><div class="workflow-checks"><label class="workflow-check"><input type="checkbox" data-stage="estimasi" data-id="${esc(r.id)}" ${r.estimasiDone?'checked':''}> Estimasi</label><label class="workflow-check"><input type="checkbox" data-stage="aktual" data-id="${esc(r.id)}" ${r.aktualDone?'checked':''}> Aktual</label></div><div class="card-action-buttons">${hasDuplicateSrf(r)?`<button class="row-merge" data-merge="${esc(r.id)}" title="Gabungkan kartu ini ke kartu lain dengan nomor SRF yang sama">Merge</button>`:''}<button class="row-delete" data-delete="${esc(r.id)}">Hapus SRF</button></div></div></article>`).join('');
+ const emptyState=document.getElementById('emptyState');
+ emptyState.hidden=filtered.length>0;
+ if(filtered.length===0){
+  emptyState.textContent=selectedReportDate?'Tidak ada laporan dengan Tanggal Report '+formatReportDate(selectedReportDate)+'. Pilih tanggal lain atau klik “Semua tanggal”.':(q?'Tidak ada laporan yang cocok dengan kata pencarian.':'Belum ada data. Paste laporan SRF di atas untuk mulai mengisi spreadsheet.');
+ }
+ renderDashboard();
+ document.getElementById('recordTag').textContent=filtered.length+' / '+records.length+' SRF';
+}
+function srfNumber(value){const matches=String(value||'').match(/\d+/g);return matches?matches[matches.length-1]:String(value||'').trim()}
+function srfKey(value){return srfNumber(value).normalize('NFKC').trim().replace(/\s+/g,'').toLocaleLowerCase('id-ID')}
+function dayRecordsFor(record,startDay){
+ const existing=(record.dayDetails||[]).map(d=>({day:Number(d.day)||0,hours:num(d.hours),date:d.date||'',dimensions:d.dimensions||'',volume:d.volume??null,multiplier:d.multiplier??1,crew:(d.crew||[]).map(parseStoredCrewEntry).filter(x=>x&&x.name)}));
+ if(existing.length)return existing;
+ const crew=crewEntries(record);
+ if(record.hours!==null&&record.hours!==undefined||crew.length){return [{day:startDay,hours:num(record.hours),date:'',crew}];}
+ return [];
+}
+function consolidateExistingRecords(items){
+ const out=[];
+ (items||[]).forEach(raw=>{
+  const item={estimasiDone:false,aktualDone:false,...raw};
+  const key=srfKey(item.srf);
+  const matches=key?out.filter(r=>srfKey(r.srf)===key):[];
+  const compatible=matches.find(r=>identityComparison(r,item).same);
+  if(compatible){const index=out.indexOf(compatible);out[index]=mergeSrfRecords(compatible,item);}
+  else{
+   if(matches.length){
+    const reasons=matches.map(r=>reporterLabel(r)+': '+conflictReasonText(identityComparison(r,item)));
+    appendConflictNote(item,'Data lama: Nomor SRF sama dengan laporan lain, tetapi identitas berbeda atau belum cukup untuk diverifikasi. Dipisahkan. '+reasons.join(' | '));
+    matches.forEach(r=>appendConflictNote(r,'Data lama: ditemukan laporan lain dengan nomor SRF sama dari '+reporterLabel(item)+'. Identitas berbeda atau belum cukup untuk diverifikasi; data dipisahkan.'));
+   }
+   out.push(item);
+  }
+ });
+ return out;
+}
+function mergeSrfRecords(target,incoming){
+ const firstDays=dayRecordsFor(target,1), nextDays=dayRecordsFor(incoming,firstDays.length+1);
+ const combinedDays=[...firstDays,...nextDays].map((d,i)=>({...d,day:i+1}));
+ const merged={...target,estimasiDone:!!(target.estimasiDone||incoming.estimasiDone),aktualDone:!!(target.aktualDone||incoming.aktualDone)};delete merged.jobNumber;
+ merged.reportDates=[...new Set([...reportDateValues(target),...reportDateValues(incoming)])];
+ merged.reportDate=merged.reportDates[merged.reportDates.length-1]||'';
+ merged.reporters=[...new Set([...reporterNames(target),...reporterNames(incoming)])];
+ merged.reporter=merged.reporters[0]||'';
+ const oldNotes=[target.conflictNotes,incoming.conflictNotes].filter(Boolean).join('\n');if(oldNotes)merged.conflictNotes=oldNotes;
+ merged.unparsed=[...new Set([...(target.unparsed||[]),...(incoming.unparsed||[])])];
+ const fields=['requestor','status','tagNumber','location','classification','material','design','scope','dimensions','statusWork','supervisor','foreman','inspector'];
+ fields.forEach(k=>{if(incoming[k]!==undefined&&incoming[k]!==null&&String(incoming[k]).trim()!=='')merged[k]=incoming[k]});
+ // Simpan dimensi terakhir pada ringkasan; dimensi setiap hari tetap berada di dayDetails.
+ const lastDayDimension=[...combinedDays].reverse().find(d=>d.dimensions)?.dimensions;
+ merged.dimensions=lastDayDimension||incoming.dimensions||target.dimensions||'';
+ Object.assign(merged,parseDimensions(merged.dimensions));
+ merged.dayDetails=combinedDays;
+ merged.days=combinedDays.length;
+ const hasDayHours=combinedDays.some(d=>d.hours!==null&&d.hours!==undefined);
+ merged.hours=hasDayHours?combinedDays.reduce((sum,d)=>sum+(Number(d.hours)||0),0):[target.hours,incoming.hours].reduce((sum,h)=>sum+(Number(h)||0),0);
+ merged.crew=aggregateDayCrew(combinedDays);
+ if(!merged.crew.length){const map=new Map();[...crewEntries(target),...crewEntries(incoming)].forEach(c=>{const k=normalizeCrewName(c.name);if(!map.has(k))map.set(k,c)});merged.crew=[...map.values()]}
+ return merged;
+}
+function identityText(value){
+ const text=String(value??'').normalize('NFKC').trim().replace(/\s+/g,' ').toLocaleLowerCase('id-ID');
+ return /^(?:-+|n\/?a|na|none|tidak ada|belum ada)$/i.test(text)?'':text;
+}
+function identityComparison(a,b){
+ // Crew tidak dipakai sebagai kunci identitas karena anggota dapat berubah antar-hari.
+ const fields=[
+  {label:'Requestor',key:'requestor',core:true},
+  {label:'Tag Number',key:'tagNumber',core:true},
+  {label:'Lokasi',key:'location',core:true},
+  {label:'Supervisor',key:'supervisor'},
+  {label:'Foreman',key:'foreman'},
+  {label:'Inspector',key:'inspector'}
+ ];
+ const differences=[],matches=[];let coreMatches=0,coreCompared=0;
+ fields.forEach(field=>{
+  const av=identityText(a?.[field.key]),bv=identityText(b?.[field.key]);
+  if(av&&bv){
+   if(field.core)coreCompared++;
+   if(av===bv){matches.push(field.label);if(field.core)coreMatches++;}
+   else differences.push(field.label+': “'+(a[field.key]??'')+'” vs “'+(b[field.key]??'')+'”');
+  }
+ });
+ if(coreMatches<2){
+  differences.push('Detail identitas utama belum cukup cocok ('+coreMatches+' cocok dari '+coreCompared+' detail utama yang dapat dibandingkan; minimal 2 kecocokan dari Requestor, Tag Number, dan Lokasi diperlukan)');
+ }
+ return {same:differences.length===0&&coreMatches>=2,conflict:differences.length>0,differences,matches,coreMatches,coreCompared};
+}
+function identityConflict(a,b){const result=identityComparison(a,b);return {conflict:!result.same,differences:result.differences};}
+function reporterNames(record){
+ const values=Array.isArray(record?.reporters)?record.reporters:[record?.reporter];
+ return [...new Set(values.map(x=>String(x??'').trim()).filter(Boolean))];
+}
+function reporterLabel(record){return reporterNames(record).join(', ')||'Belum diisi';}
+function appendConflictNote(record,note){
+ const clean=String(note||'').trim();if(!clean)return;
+ const existing=String(record.conflictNotes||'').split('\n').map(x=>x.trim()).filter(Boolean);
+ if(!existing.includes(clean))existing.push(clean);
+ record.conflictNotes=existing.join('\n');
+}
+function conflictReasonText(comparison){return comparison.differences.join('; ')}
+function conflictSummary(comparison){
+ const text=(comparison?.differences||[]).join(' ');
+ if(/belum cukup cocok/i.test(text))return 'identitas belum cukup';
+ const labels=['Requestor','Tag Number','Lokasi','Supervisor','Foreman','Inspector'].filter(label=>text.toLowerCase().includes(label.toLowerCase()+':'));
+ return labels.length?labels.join(', ').toLowerCase()+' berbeda':'identitas berbeda';
+}
+function compactConflictNotes(record){
+ const raw=String(record?.conflictNotes||'').trim();if(!raw)return '';
+ const compact=[];
+ raw.split('\n').map(x=>x.trim()).filter(Boolean).forEach(note=>{
+  let result='';
+  if(/^Nomor SRF sama; .{1,75}\.$/i.test(note)||/^Merge manual; .{1,75}\.$/i.test(note)||/^Data digabung manual\./i.test(note))result=note;
+  else if(/belum cukup cocok/i.test(note))result='Nomor SRF sama; identitas belum cukup.';
+  else if(/perbedaan identitas|identitas berbeda/i.test(note))result=/merge manual/i.test(note)?'Merge manual; identitas berbeda.':'Nomor SRF sama; identitas berbeda.';
+  else if(/disimpan terpisah|dipisah manual|sengaja disimpan terpisah/i.test(note))result='Nomor SRF sama; dipisah manual.';
+  else if(/merge manual/i.test(note))result='Data digabung manual.';
+  else if(/nomor srf sama/i.test(note))result='Nomor SRF sama; perlu dicek.';
+  else result=note.length>90?note.slice(0,87)+'...':note;
+  if(result&&!compact.includes(result))compact.push(result);
+ });
+ return compact.slice(0,3).join('\n');
+}
+function parseWarning(r){const w=[];if(!crewEntries(r).length)w.push('Crew tidak terbaca');if(!r.supervisor)w.push('Supv kosong');if(!r.foreman)w.push('F/M kosong');if(!r.inspector)w.push('Insp kosong');if(r.hours===null||r.hours===''||r.hours===undefined)w.push('Jam kosong');if(!r.dimensions||!r.volume)w.push('Kubik tidak terbaca');if(r.hoursMismatch)w.push('Periksa total jam: total laporan '+fmt(r.hoursMismatch.declared)+' jam, rincian hari '+fmt(r.hoursMismatch.days)+' jam');if(r.unparsed&&r.unparsed.length)w.push('Catatan parser: '+r.unparsed.join(' | '));return w.join(', ')}
+function hasDuplicateSrf(record){const key=srfKey(record.srf);return !!key&&records.filter(r=>srfKey(r.srf)===key).length>1}
+function addParsed(){
+ const text=document.getElementById('pasteArea').value;const parsed=parseReports(text);
+ if(!parsed.length){alert('Laporan belum terbaca. Pastikan setiap laporan memiliki baris “Requestor : ...”.');return;}
+ const selectedReportDate=document.getElementById('reportDateInput').value;
+ if(!selectedReportDate){alert('Pilih “Tanggal Report” terlebih dahulu sebelum memasukkan laporan.');document.getElementById('reportDateInput').focus();return;}
+ const batchReporter=document.getElementById('reporterInput').value.trim();
+ const missingReporter=parsed.filter(report=>!(report.reporter||batchReporter));
+ if(missingReporter.length){alert('Isi field “Reporter / Input By” terlebih dahulu, atau tambahkan field “Reporter / Input By : Nama” pada setiap laporan.');return;}
+ let mergedCount=0,addedCount=0,separateCount=0,autoSeparated=[];
+ parsed.forEach(report=>{
+  const reporter=(report.reporter||batchReporter).trim();
+  report.reporter=reporter;report.reporters=[reporter];report.reportDate=selectedReportDate;report.reportDates=[selectedReportDate];report.estimasiDone=false;report.aktualDone=false;
+  const key=srfKey(report.srf);
+  const matches=key?records.filter(r=>srfKey(r.srf)===key):[];
+  const comparisons=matches.map(record=>({record,comparison:identityComparison(record,report)}));
+  const compatible=comparisons.find(x=>x.comparison.same);
+  if(compatible){
+   const existing=compatible.record;
+   const shouldMerge=confirm('NOMOR SRF SAMA — DETAIL IDENTITAS COCOK\n\nSRF: '+report.srf+'\nReporter baru: '+reporter+'\nReporter tersimpan: '+reporterLabel(existing)+'\n\nOK = gabungkan sebagai laporan multi-day.\nBatal = simpan sebagai pekerjaan terpisah.');
+   if(shouldMerge){const updated=mergeSrfRecords(existing,report);Object.assign(existing,updated);mergedCount++;}
+   else{
+    const note='Nomor SRF sama; dipisah manual.';
+    appendConflictNote(report,note);appendConflictNote(existing,note);
+    records.push(report);addedCount++;separateCount++;
+   }
+   return;
+  }
+  if(matches.length){
+   const shortReason=[...new Set(comparisons.map(x=>conflictSummary(x.comparison)))].join('; ');
+   const note='Nomor SRF sama; '+shortReason+'.';
+   appendConflictNote(report,note);
+   matches.forEach(existing=>appendConflictNote(existing,'Nomor SRF sama; laporan reporter lain dipisahkan.'));
+   records.push(report);addedCount++;separateCount++;
+   autoSeparated.push('SRF '+(report.srf||'—')+' | '+shortReason);
+  }else{records.push(report);addedCount++;}
+ });
+ persist();render();document.getElementById('pasteArea').value='';
+ let message=`${addedCount} data pekerjaan baru ditambahkan dan ${mergedCount} laporan digabung.`;
+ if(separateCount)message+=`\n${separateCount} laporan disimpan sebagai pekerjaan terpisah.`;
+ if(autoSeparated.length)message+='\n\nPERINGATAN — DIPISAH OTOMATIS KARENA KONFLIK NOMOR SRF:\n'+autoSeparated.map(x=>'• '+x).join('\n')+'\n\nPeriksa kolom “Catatan Konflik” pada kartu SRF terkait.';
+ const warns=parsed.map(p=>parseWarning(p)?'• SRF '+p.srf+': '+parseWarning(p):'').filter(Boolean);if(warns.length)message+='\n\nPERIKSA (mungkin tidak terbaca penuh):\n'+warns.join('\n');
+ alert(message);
+}
+function mergeDuplicateRecords(sourceId){
+ const sourceIndex=records.findIndex(r=>r.id===sourceId);
+ if(sourceIndex<0){alert('Kartu SRF tidak ditemukan. Muat ulang daftar dan coba lagi.');return;}
+ const source=records[sourceIndex];
+ const key=srfKey(source.srf);
+ const candidates=records.map((record,index)=>({record,index})).filter(x=>x.index!==sourceIndex&&srfKey(x.record.srf)===key);
+ if(!key||!candidates.length){alert('Tidak ditemukan kartu lain dengan nomor SRF yang sama.');return;}
+ const options=candidates.map((x,n)=>`${n+1}. Kartu #${x.index+1} | Reporter: ${reporterLabel(x.record)} | Requestor: ${x.record.requestor||'—'} | Tag: ${x.record.tagNumber||'—'} | Lokasi: ${x.record.location||'—'}`).join('\n');
+ const answer=prompt(`PILIH KARTU TUJUAN MERGE\n\nKartu yang akan digabung: #${sourceIndex+1}\nSRF: ${source.srf}\nReporter: ${reporterLabel(source)}\n\nMasukkan nomor pilihan kartu tujuan:\n\n${options}`, '');
+ if(answer===null)return;
+ const selected=Number.parseInt(answer.trim(),10);
+ if(!Number.isInteger(selected)||selected<1||selected>candidates.length){alert('Pilihan tidak valid. Tidak ada data yang diubah.');return;}
+ const targetInfo=candidates[selected-1];
+ const target=targetInfo.record;
+ const comparison=identityComparison(target,source);
+ const detail=comparison.same
+  ? 'Detail identitas utama cocok.'
+  : 'PERINGATAN: detail identitas berbeda atau belum cukup cocok.\n'+conflictReasonText(comparison);
+ const confirmText=`KONFIRMASI MERGE MANUAL\n\nSRF: ${source.srf}\n\nKartu sumber: #${sourceIndex+1} — ${reporterLabel(source)}\nKartu tujuan: #${targetInfo.index+1} — ${reporterLabel(target)}\n\n${detail}\n\nData dari kartu sumber akan digabung ke kartu tujuan. Jika field identitas yang sama-sama terisi berbeda, nilai dari kartu sumber akan menjadi nilai utama. Reporter, data crew, dan catatan konflik akan dipertahankan.\n\nLanjutkan penggabungan?`;
+ if(!confirm(confirmText))return;
+ const merged=mergeSrfRecords(target,source);
+ const mergeNote=`Data digabung manual dari reporter ${reporterLabel(source)}.`;
+ appendConflictNote(merged,mergeNote);
+ if(!comparison.same){
+  appendConflictNote(merged,'Merge manual; '+conflictSummary(comparison)+'.');
+ }
+ records=records.filter(r=>r.id!==source.id).map(r=>r.id===target.id?merged:r);
+ persist();
+ render();
+ alert(`Merge berhasil. Kartu sumber #${sourceIndex+1} telah digabung ke kartu tujuan #${targetInfo.index+1}.\n\nPeriksa kolom Catatan Konflik untuk riwayat penggabungan.`);
+}
+
+function portraitRows(){
+ const out=[['SRF DATA','']];
+ const fields=[['SRF',r=>r.srf],['Tanggal Report',r=>reportDateLabel(r)],['Reporter / Input By',r=>reporterLabel(r)],['Requestor',r=>r.requestor],['Status SRF',r=>r.status],['Tag Number',r=>r.tagNumber],['Lokasi',r=>r.location],['Klasifikasi Scaffold',r=>r.classification],['Jenis Material',r=>r.material],['Desain Scaffold',r=>r.design],['Scope Scaffold',r=>r.scope],['Aktual Kubik Meter (P×L×T) m',r=>r.dimensions],['Aktual Jam Kerja Total (jam)',r=>r.hours],['Jumlah Hari',r=>r.days||''],['Nama Supv',r=>r.supervisor],['Nama F/M',r=>r.foreman],['Nama Insp',r=>r.inspector],['Nama Crew',r=>crewEntries(r).map(crewLabel).join('; ')],['Jumlah Crew',r=>crewEntries(r).length],['Catatan Konflik',r=>compactConflictNotes(r)],['Estimasi',r=>r.estimasiDone?'Sudah':'Belum'],['Aktual',r=>r.aktualDone?'Sudah':'Belum']];
+ records.forEach((r,i)=>{if(i)out.push(['','']);out.push(['LAPORAN SRF '+r.srf,'']);fields.forEach(([label,get])=>out.push([label,get(r)??'']));});return out;
+}
+function crewRows(){
+ const out=[['SRF','Tanggal Report','Reporter / Input By','Lokasi','Nama Crew','Total Jam Kerja Crew (jam)','Jumlah Hari Hadir']];
+ records.forEach(r=>crewEntries(r).forEach(c=>{
+  const attended=(r.dayDetails||[]).filter(d=>(d.crew||[]).some(x=>{const parsed=parseStoredCrewEntry(x);return parsed&&!parsed.absent&&normalizeCrewName(parsed.name)===normalizeCrewName(c.name)}));
+  out.push([r.srf,reportDateLabel(r),reporterLabel(r),r.location,c.name,c.hours??'',attended.length]);
+ }));return out;
+}
+function csvCell(v){const s=String(v??'');return '"'+s.replace(/"/g,'""')+'"'}
+function download(blob,name){const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+function exportCsv(){const rows=portraitRows();const csv='\ufeff'+rows.map(row=>row.map(csvCell).join(';')).join('\r\n');download(new Blob([csv],{type:'text/csv;charset=utf-8;'}),'SRF_Data.csv')}
+function exportXlsx(){
+ if(!window.XLSX){alert('Library Excel belum tersedia. Gunakan Export CSV; file CSV dapat dibuka langsung dengan Microsoft Excel. Pastikan internet aktif untuk fitur .xlsx.');return;}
+ const wb=XLSX.utils.book_new();const data=portraitRows();const ws=XLSX.utils.aoa_to_sheet(data);ws['!cols']=[{wch:38},{wch:48}];ws['!merges']=[];data.forEach((row,i)=>{if(row[0].startsWith('LAPORAN SRF '))ws['!merges'].push({s:{r:i,c:0},e:{r:i,c:1}})});XLSX.utils.book_append_sheet(wb,ws,'SRF Data');
+ const crew=XLSX.utils.aoa_to_sheet(crewRows());crew['!cols']=[{wch:16},{wch:22},{wch:24},{wch:28},{wch:25},{wch:24},{wch:18}];XLSX.utils.book_append_sheet(wb,crew,'Crew Detail');
+ XLSX.writeFile(wb,'SRF_Data.xlsx');
+}
+const reporterInput=document.getElementById('reporterInput');try{reporterInput.value=localStorage.getItem(REPORTER_KEY)||'';}catch(e){}
+reporterInput.addEventListener('input',()=>{try{localStorage.setItem(REPORTER_KEY,reporterInput.value.trim());}catch(e){}});
+const reportDateInput=document.getElementById('reportDateInput');
+try{reportDateInput.value=localStorage.getItem(REPORT_DATE_KEY)||localDateISO();}catch(e){reportDateInput.value=localDateISO();}
+if(!reportDateInput.value)reportDateInput.value=localDateISO();
+reportDateInput.addEventListener('change',()=>{try{localStorage.setItem(REPORT_DATE_KEY,reportDateInput.value);}catch(e){}});
+['dashboardFrom','dashboardTo','dashboardReporter','dashboardLocation','dashboardStatus','dashboardClass'].forEach(id=>document.getElementById(id).addEventListener('change',renderDashboard));
+document.getElementById('resetDashboardFilters').addEventListener('click',()=>{
+ ['dashboardFrom','dashboardTo','dashboardReporter','dashboardLocation','dashboardStatus','dashboardClass'].forEach(id=>document.getElementById(id).value='');
+ renderDashboard();
+});
+document.getElementById('addButton').addEventListener('click',addParsed);
+document.getElementById('clearPasteButton').addEventListener('click',()=>document.getElementById('pasteArea').value='');
+document.getElementById('loadExampleButton').addEventListener('click',()=>document.getElementById('pasteArea').value=exampleText);
+document.getElementById('searchInput').addEventListener('input',render);
+document.getElementById('reportDateFilter').addEventListener('change',render);
+document.getElementById('clearReportDateFilter').addEventListener('click',()=>{document.getElementById('reportDateFilter').value='';render();});
+document.getElementById('exportCsvButton').addEventListener('click',exportCsv);
+document.getElementById('exportXlsxButton').addEventListener('click',exportXlsx);
+document.getElementById('deleteAllButton').addEventListener('click',()=>{if(confirm('Hapus seluruh laporan yang tersimpan di browser ini? Tindakan ini tidak dapat dibatalkan.')){records=[];persist();render();}});
+document.getElementById('recordList').addEventListener('change',e=>{const box=e.target;if(!box?.dataset?.stage||!box?.dataset?.id)return;const row=records.find(r=>r.id===box.dataset.id);if(!row)return;row[box.dataset.stage+'Done']=box.checked;persist();render();});
+document.addEventListener('click',async e=>{
+ const button=e.target.closest('[data-copy-crew]');if(!button)return;
+ const name=button.getAttribute('data-copy-crew')||'';
+ try{
+  await copyCrewNameToClipboard(name);
+  const original=button.innerHTML,originalTitle=button.title,originalLabel=button.getAttribute('aria-label');
+  button.innerHTML=copiedIconSvg();button.classList.add('copied');button.title='Nama berhasil disalin';button.setAttribute('aria-label','Nama crew berhasil disalin');
+  button.dataset.copyFeedback='1';
+  window.setTimeout(()=>{if(!button.isConnected)return;button.innerHTML=original;button.classList.remove('copied');button.title=originalTitle;button.setAttribute('aria-label',originalLabel||'Copy nama crew');delete button.dataset.copyFeedback;},1300);
+ }catch(error){alert('Nama crew tidak berhasil disalin. Silakan pilih dan salin nama secara manual.');}
+});
+document.getElementById('recordList').addEventListener('click',e=>{const mergeId=e.target?.dataset?.merge;if(mergeId){mergeDuplicateRecords(mergeId);return;}const id=e.target?.dataset?.delete;if(!id)return;records=records.filter(r=>r.id!==id);persist();render();});
+
+// Separate navigation views while keeping both screens connected to the same local data.
+function setActiveView(view, scrollTop=false){
+ const active=view==='dashboard'?'dashboard':'input';
+ document.getElementById('dashboardView').hidden=active!=='dashboard';
+ document.getElementById('inputView').hidden=active!=='input';
+ document.querySelectorAll('[data-view-link]').forEach(link=>{
+  const selected=link.dataset.viewLink===active;
+  link.classList.toggle('active',selected);
+  if(selected)link.setAttribute('aria-current','page');else link.removeAttribute('aria-current');
+ });
+ if(active==='dashboard')renderDashboard();
+ if(scrollTop)window.scrollTo({top:0,behavior:'auto'});
+}
+function syncViewFromHash(){setActiveView(location.hash==='#dashboard'?'dashboard':'input');}
+window.addEventListener('hashchange',syncViewFromHash);
+document.querySelectorAll('[data-view-link]').forEach(link=>link.addEventListener('click',()=>{
+ const target=link.dataset.viewLink==='dashboard'?'#dashboard':'#input';
+ if(location.hash===target){setActiveView(link.dataset.viewLink,true);}
+}));
+persist();render();syncViewFromHash();
+</script>
+</body>
+</html>
