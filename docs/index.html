@@ -1461,7 +1461,7 @@ function scheduleNextSync() {
       isSyncing = false;
     }
     scheduleNextSync();
-  }, 60000);
+  }, 30000);
 }
 render();syncViewFromHash();fetchFromCloud(false).then(() => scheduleNextSync());
 let activeQuickFilter = 'all';
