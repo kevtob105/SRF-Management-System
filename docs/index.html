@@ -2423,39 +2423,6 @@ render();
   };
 })();
 </script>
-  <script>
-(function() {
-  const LOCAL_CACHE_KEY = 'srf_local_backup_v1';
 
-  // Simpan salinan data setiap kali berhasil render dari cloud
-  if (typeof render === 'function') {
-    const origRender = render;
-    window.render = function() {
-      origRender.apply(this, arguments);
-      if (Array.isArray(records) && records.length > 0) {
-        try {
-          localStorage.setItem(LOCAL_CACHE_KEY, JSON.stringify(records));
-        } catch (e) {}
-      }
-    };
-  }
-
-  // Jika saat pertama buka halaman cloud gagal merespons, muat cadangan lokal dulu
-  window.addEventListener('load', () => {
-    setTimeout(() => {
-      if ((!records || records.length === 0)) {
-        try {
-          const cached = JSON.parse(localStorage.getItem(LOCAL_CACHE_KEY) || '[]');
-          if (Array.isArray(cached) && cached.length > 0) {
-            records = cached;
-            render();
-            setSyncStatus('err', '⚠ Offline/Limit — menampilkan ' + records.length + ' data terakhir');
-          }
-        } catch (e) {}
-      }
-    }, 4000);
-  });
-})();
-</script>
 </body>
 </html>
