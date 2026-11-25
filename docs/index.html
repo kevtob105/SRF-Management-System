@@ -2360,25 +2360,19 @@ render();
       try {
         const res = await fetch(url, {
           method: 'GET',
-          cache: 'no-store',
+          redirect: 'follow',
+          credentials: 'omit',
           signal: controller.signal
         });
         clearTimeout(timer);
-        if (!res.ok) {
-          throw new Error('HTTP ' + res.status);
-        }
+        if (!res.ok) throw new Error('HTTP ' + res.status);
         const text = await res.text();
-        try {
-          return JSON.parse(text);
-        } catch (parseErr) {
-          throw new Error('Respons server bukan JSON (kemungkinan limit Google Apps Script)');
-        }
+        return JSON.parse(text);
       } catch (err) {
         clearTimeout(timer);
         lastError = err;
         if (attempt < retries) {
-          // Tunggu sebentar (1 detik, lalu 2 detik) sebelum mencoba ulang
-          await new Promise(r => setTimeout(r, 1000 * (attempt + 1)));
+          await new Promise(r => setTimeout(r, 1200 * (attempt + 1)));
         }
       }
     }
@@ -2406,16 +2400,10 @@ render();
     } catch (err) {
       console.error('Detail gagal fetchFromCloud:', err);
       const isAbort = err.name === 'AbortError';
-      const isNetwork = err instanceof TypeError;
-      const reason = isAbort
-        ? 'Timeout (>15 dtk)'
-        : isNetwork
-          ? 'Koneksi/CORS terputus'
-          : (err.message || 'Error tidak diketahui');
-
+      const reason = isAbort ? 'Timeout (>15 dtk)' : 'Koneksi HTTP/2 terputus (cek jaringan/multi-login)';
       setSyncStatus('err', '✕ Gagal memuat: ' + reason);
       if (!silent) {
-        alert('Gagal mengambil data dari Google Sheets.\nPenyebab: ' + reason + '\n\nCoba klik tombol 🔄 Refresh Data dalam beberapa detik.');
+        alert('Gagal mengambil data dari Google Sheets.\nPenyebab: ' + reason);
       }
     } finally {
       if (refreshBtn) refreshBtn.disabled = false;
