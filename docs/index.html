@@ -2350,5 +2350,78 @@ render();
   enhancePersonCopyButtons();
 })();
 </script>
+<script>
+(function() {
+  async function fetchWithTimeoutAndRetry(url, retries = 2, timeoutMs = 15000) {
+    let lastError;
+    for (let attempt = 0; attempt <= retries; attempt++) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), timeoutMs);
+      try {
+        const res = await fetch(url, {
+          method: 'GET',
+          cache: 'no-store',
+          signal: controller.signal
+        });
+        clearTimeout(timer);
+        if (!res.ok) {
+          throw new Error('HTTP ' + res.status);
+        }
+        const text = await res.text();
+        try {
+          return JSON.parse(text);
+        } catch (parseErr) {
+          throw new Error('Respons server bukan JSON (kemungkinan limit Google Apps Script)');
+        }
+      } catch (err) {
+        clearTimeout(timer);
+        lastError = err;
+        if (attempt < retries) {
+          // Tunggu sebentar (1 detik, lalu 2 detik) sebelum mencoba ulang
+          await new Promise(r => setTimeout(r, 1000 * (attempt + 1)));
+        }
+      }
+    }
+    throw lastError;
+  }
+
+  window.fetchFromCloud = async function(silent = false) {
+    if (!silent) setSyncStatus('loading', '⏳ Memuat data dari Google Sheets...');
+    const refreshBtn = document.getElementById('refreshCloudButton');
+    if (refreshBtn) refreshBtn.disabled = true;
+
+    try {
+      const data = await fetchWithTimeoutAndRetry(SCRIPT_URL + '?t=' + Date.now(), 2, 15000);
+      if (data && data.status === 'ok' && Array.isArray(data.records)) {
+        records = data.records.map(r => {
+          const clean = { estimasiDone: false, aktualDone: false, ...r, srf: srfNumber(r.srf) };
+          delete clean.jobNumber;
+          return clean;
+        });
+        render();
+        setSyncStatus('ok', '✓ Tersinkronisasi (' + records.length + ' SRF)');
+      } else {
+        throw new Error(data?.message || 'Format respons tidak sesuai');
+      }
+    } catch (err) {
+      console.error('Detail gagal fetchFromCloud:', err);
+      const isAbort = err.name === 'AbortError';
+      const isNetwork = err instanceof TypeError;
+      const reason = isAbort
+        ? 'Timeout (>15 dtk)'
+        : isNetwork
+          ? 'Koneksi/CORS terputus'
+          : (err.message || 'Error tidak diketahui');
+
+      setSyncStatus('err', '✕ Gagal memuat: ' + reason);
+      if (!silent) {
+        alert('Gagal mengambil data dari Google Sheets.\nPenyebab: ' + reason + '\n\nCoba klik tombol 🔄 Refresh Data dalam beberapa detik.');
+      }
+    } finally {
+      if (refreshBtn) refreshBtn.disabled = false;
+    }
+  };
+})();
+</script>
 </body>
 </html>
