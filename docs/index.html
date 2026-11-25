@@ -2267,6 +2267,117 @@ render();
   }, true);
 })();
 </script>
+<script>
+(function() {
+  const PAGE_SIZE = 30;
+  let visibleLimit = PAGE_SIZE;
 
+  // 1. Kompres payload sebelum dikirim ke Google Sheets (buang field turunan yang bisa dihitung ulang)
+  function minifyRecordForCloud(r) {
+    const copy = Object.assign({}, r);
+    delete copy.unparsed;
+    delete copy.length;
+    delete copy.width;
+    delete copy.height;
+    delete copy.volume;
+    delete copy.multiplier;
+    if (Array.isArray(copy.dayDetails)) {
+      if (copy.dayDetails.length <= 1) {
+        delete copy.dayDetails;
+      } else {
+        copy.dayDetails = copy.dayDetails.map(d => {
+          const dayCopy = { day: d.day, hours: d.hours, date: d.date, dimensions: d.dimensions, crew: d.crew };
+          if (d.inferred) dayCopy.inferred = true;
+          return dayCopy;
+        });
+      }
+    }
+    return copy;
+  }
+
+  // Rekonstruksi nilai dimensi/volume saat data dimuat dari cloud
+  function hydrateRecord(r) {
+    const clean = Object.assign({ estimasiDone: false, aktualDone: false }, r, { srf: srfNumber(r.srf) });
+    delete clean.jobNumber;
+    if (clean.dimensions) Object.assign(clean, parseDimensions(clean.dimensions));
+    if (Array.isArray(clean.dayDetails)) {
+      clean.dayDetails = clean.dayDetails.map(day => {
+        const dd = parseDimensions(day.dimensions || '');
+        return Object.assign({}, day, dd);
+      });
+    }
+    return clean;
+  }
+
+  // Override syncUpsertCloud agar mengirim payload ramping
+  if (typeof syncUpsertCloud === 'function') {
+    const origUpsert = syncUpsertCloud;
+    window.syncUpsertCloud = function(itemsToSave) {
+      const slimItems = (itemsToSave || []).map(minifyRecordForCloud);
+      return origUpsert.call(this, slimItems);
+    };
+  }
+
+  // 2. Paginasi DOM: hanya render maksimal `visibleLimit` kartu agar DOM tetap ringan
+  if (typeof render === 'function') {
+    const origRender = render;
+    window.render = function() {
+      const allRecords = records;
+      // Potong sementara array hanya saat merender kartu jika jumlahnya melebihi batas tampil
+      const filteredPreview = typeof getFilteredRecords === 'function' ? getFilteredRecords(false) : allRecords;
+      const totalFiltered = filteredPreview.length;
+
+      origRender.apply(this, arguments);
+
+      const listEl = document.getElementById('recordList');
+      if (!listEl) return;
+
+      const cards = listEl.querySelectorAll('.record-card');
+      if (cards.length > visibleLimit) {
+        cards.forEach((card, idx) => {
+          if (idx >= visibleLimit) card.remove();
+        });
+
+        let moreBtn = document.getElementById('loadMoreCardsBtn');
+        if (!moreBtn) {
+          moreBtn = document.createElement('button');
+          moreBtn.id = 'loadMoreCardsBtn';
+          moreBtn.type = 'button';
+          moreBtn.className = 'btn-soft';
+          moreBtn.style.cssText = 'width:100%;margin-top:12px;padding:12px;font-weight:800;';
+          moreBtn.addEventListener('click', () => {
+            visibleLimit += PAGE_SIZE;
+            window.render();
+          });
+          listEl.parentNode.insertBefore(moreBtn, listEl.nextSibling);
+        }
+        const remaining = totalFiltered - visibleLimit;
+        moreBtn.hidden = false;
+        moreBtn.textContent = 'Tampilkan lebih banyak (' + Math.min(PAGE_SIZE, remaining) + ' dari ' + remaining + ' kartu tersisa)';
+      } else {
+        const moreBtn = document.getElementById('loadMoreCardsBtn');
+        if (moreBtn) moreBtn.hidden = true;
+      }
+    };
+  }
+
+  // Reset batas tampil ke 30 saat filter atau pencarian berubah
+  ['searchInput', 'crewFilterInput', 'reportDateFilter'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener('input', () => { visibleLimit = PAGE_SIZE; }, true);
+    el.addEventListener('change', () => { visibleLimit = PAGE_SIZE; }, true);
+  });
+  document.getElementById('quickStatusFilters')?.addEventListener('click', () => {
+    visibleLimit = PAGE_SIZE;
+  }, true);
+
+  // Hydrate data yang sudah ada di memori
+  if (Array.isArray(records) && records.length) {
+    records = records.map(hydrateRecord);
+    window.render();
+  }
+})();
+</script>
 </body>
 </html>
